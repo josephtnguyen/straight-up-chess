@@ -26,6 +26,24 @@ body {
 
 .nav {
   background-color: #f8f8f9;
+  padding: 1rem;
+  width: 375px;
+}
+
+.navbar-link {
+  color: #4e545e;
+  font-size: 36px;
+  padding: 0;
+}
+
+.navbar-link:hover {
+  color: #1a1c20;
+}
+
+.navbar-sep {
+  border: 1px solid #4e545e;
+  width: 340px;
+  margin: 0.5rem 0;
 }
 
 .home {
