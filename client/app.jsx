@@ -1,13 +1,15 @@
 import React from 'react';
-import Home from './pages/home';
 import Header from './components/header';
+// import Home from './pages/home';
+import JoinGame from './pages/join-game';
 
 export default class App extends React.Component {
   render() {
     return (
       <>
         <Header />
-        <Home />
+        {/* <Home /> */}
+        <JoinGame />
       </>
     );
   }
