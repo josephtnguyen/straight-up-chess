@@ -45,13 +45,18 @@ app.post('/api/create-post', (req, res, next) => {
   const params = [playerName, message, playerSide];
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      res.json(result.rows[0]);
     })
     .catch(err => next(err));
 });
 
 app.delete('/api/cancel-post/:postId', (req, res, next) => {
   const postId = req.params.postId;
+  const postIdInt = parseInt(postId);
+  if (!Number.isInteger(postIdInt)) {
+    throw new ClientError(400, `${postId} is not a valid postId`);
+  }
+
   const sql = `
   delete from "postedGames"
         where "postId" = $1
@@ -60,7 +65,10 @@ app.delete('/api/cancel-post/:postId', (req, res, next) => {
   const params = [postId];
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      if (result.rows.length === 0) {
+        throw new ClientError(404, 'no such postId exists');
+      }
+      res.json(result.rows[0]);
     })
     .catch(err => next(err));
 });
