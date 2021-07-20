@@ -6,7 +6,7 @@ export default class Header extends React.Component {
       backgroundImage: 'url(images/default-avatar.svg)'
     };
     return (
-      <div className="navbar container header">
+      <div className="header container d-flex justify-content-between align-items-center">
         <button className="btn hamburger-menu-btn">
           <img src="images/hamburger-menu.svg" />
         </button>

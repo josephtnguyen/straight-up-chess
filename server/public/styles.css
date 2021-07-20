@@ -1,3 +1,7 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
   background-color: #eaecee;
 }
@@ -17,4 +21,22 @@ body {
 .avatar {
   height: 44px;
   width: 44px;
+}
+
+.home {
+  height: calc(100vh - 54px);
+  padding-top: 7rem;
+}
+
+button.gamemode {
+  background-color: #4e545e;
+  color: #eaecee;
+  font-size: 36px;
+  font-weight: lighter;
+  letter-spacing: 2.5px;
+  width: 340px;
+}
+
+button.gamemode:hover {
+  background-color: #1a1c20;
 }
