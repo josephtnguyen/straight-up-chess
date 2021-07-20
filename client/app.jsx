@@ -12,6 +12,7 @@ export default class App extends React.Component {
       navOpen: false,
       route: parseRoute(window.location.hash)
     };
+    this.handleClickNav = this.handleClickNav.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 
@@ -19,6 +20,14 @@ export default class App extends React.Component {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+  }
+
+  handleClickNav() {
+    if (this.state.navOpen) {
+      this.setState({ navOpen: false });
+    } else {
+      this.setState({ navOpen: true });
+    }
   }
 
   renderPage() {
@@ -33,10 +42,12 @@ export default class App extends React.Component {
   }
 
   render() {
+    const { navOpen } = this.state;
+    const { handleClickNav } = this;
     return (
       <>
-        <Header />
-        <Nav />
+        <Header navOpen={navOpen} handleClickNav={handleClickNav} />
+        <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
         {this.renderPage()}
       </>
     );

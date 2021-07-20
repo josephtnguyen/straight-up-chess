@@ -6,6 +6,10 @@ body {
   background-color: #eaecee;
 }
 
+.page-height {
+  height: calc(100vh - 66px);
+}
+
 .header {
   background-color: #32363c;
   height: 66px;
@@ -13,6 +17,10 @@ body {
 
 .hamburger-menu-btn {
   border-radius: 5px;
+}
+
+.hamburger-menu-btn.selected {
+  border: 4px solid #c7ccdb;
 }
 
 .hamburger-menu-btn:hover {
@@ -24,10 +32,30 @@ body {
   width: 44px;
 }
 
+.nav-background {
+  width: 100%;
+  background-color: rgba(40, 40, 40, 0);
+  pointer-events: none;
+  transition: background-color 0.25s ease;
+  z-index: 1;
+}
+
+.nav-background.show {
+  background-color: rgba(40, 40, 40, 0.7);
+  pointer-events: all;
+}
+
 .nav {
   background-color: #f8f8f9;
   padding: 1rem;
   width: 375px;
+  left: -375px;
+  transition: left 0.25s ease;
+  z-index: 2;
+}
+
+.nav.show {
+  left: 0;
 }
 
 .navbar-link {
@@ -47,7 +75,6 @@ body {
 }
 
 .home {
-  height: calc(100vh - 66px);
   padding-top: 7rem;
 }
 
