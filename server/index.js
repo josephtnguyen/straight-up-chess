@@ -2,6 +2,7 @@ require('dotenv/config');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const ClientError = require('./client-error');
 const pg = require('pg');
 
 const db = new pg.Pool({
@@ -33,7 +34,22 @@ app.get('/api/get-posts', (req, res, next) => {
 });
 
 app.post('/api/create-post', (req, res, next) => {
+  const { playerName, message, playerSide } = req.body;
+  if (!playerName || !message || !playerSide) {
+    throw new ClientError(400, 'missing required field');
+  }
 
+  const sql = `
+  insert into "postedGames" ("playerName", "message", "playerSide")
+  values ($1, $2, $3)
+  returning *
+  `;
+  const params = [playerName, message, playerSide];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
 });
 
 app.listen(process.env.PORT, () => {

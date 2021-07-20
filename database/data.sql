@@ -1,3 +1,3 @@
-insert into "postedGames" ("playerName", "message", "challengerSide")
-values ('Anonymous', 'play me', 'white')
+insert into "postedGames" ("playerName", "message", "playerSide")
+values ('Anonymous', 'play me', 'black')
 returning *;
