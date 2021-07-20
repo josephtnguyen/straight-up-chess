@@ -18,12 +18,10 @@ app.use(express.json());
 
 app.use(staticMiddleware);
 
-app.use(errorMiddleware);
-
 app.get('/api/get-posts', (req, res, next) => {
   const sql = `
   select *
-    from "postedGames"
+  from "postedGames"
   `;
 
   db.query(sql)
@@ -51,6 +49,23 @@ app.post('/api/create-post', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.delete('/api/cancel-post/:postId', (req, res, next) => {
+  const postId = req.params.postId;
+  const sql = `
+  delete from "postedGames"
+        where "postId" = $1
+  returning *
+  `;
+  const params = [postId];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
