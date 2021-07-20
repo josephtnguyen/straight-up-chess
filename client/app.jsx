@@ -4,6 +4,7 @@ import Nav from './components/nav';
 import Home from './pages/home';
 import JoinGame from './pages/join-game';
 import parseRoute from './lib/parse-route';
+import PostForm from './pages/post-form';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -48,7 +49,8 @@ export default class App extends React.Component {
       <>
         <Header navOpen={navOpen} handleClickNav={handleClickNav} />
         <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
-        {this.renderPage()}
+        {/* {this.renderPage()} */}
+        <PostForm />
       </>
     );
   }
