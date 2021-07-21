@@ -19,6 +19,7 @@ export default class Game extends React.Component {
     const player = { username: 'Anonymous' };
     return (
       <div className="game container page-height">
+        <PlayerPalette player={null} />
         <div>
           <ReactBoard board={board} />
         </div>

@@ -222,6 +222,11 @@ button.gamemode:hover {
   width: 240px;
 }
 
+.palette-pending {
+  margin: 0.25rem;
+  font-weight: 350;
+}
+
 .board {
   width: 350px;
   height: 350px;
