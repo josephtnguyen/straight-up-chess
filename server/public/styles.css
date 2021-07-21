@@ -6,7 +6,8 @@ body {
   background-color: #eaecee;
 }
 
-button {
+button,
+.cancel-btn {
   border: 0;
   border-radius: 5px;
 }
@@ -175,6 +176,10 @@ button.gamemode:hover {
 .cancel-btn {
   background-color: white;
   color: #32363c;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .create-post-btn {
