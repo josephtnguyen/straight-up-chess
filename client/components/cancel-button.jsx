@@ -4,7 +4,7 @@ export default function CancelButton(props) {
   const { href } = props;
   return (
     <a href={href}>
-      <button className="cancel">Cancel</button>
+      <button className="cancel-btn">Cancel</button>
     </a>
   );
 }
