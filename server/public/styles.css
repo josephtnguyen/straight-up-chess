@@ -6,8 +6,13 @@ body {
   background-color: #eaecee;
 }
 
+a {
+  text-decoration: none;
+}
+
 button,
-.cancel-btn {
+.cancel-btn,
+.create-post-btn {
   border: 0;
   border-radius: 5px;
 }
@@ -183,17 +188,22 @@ button.gamemode:hover {
 }
 
 .cancel-btn:hover {
-  color: inherit;
+  color: #32363c;
 }
 
 .create-post-btn {
   background-color: #0173fa;
   color: #eaecee;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   opacity: 75%;
   transition: opacity 0.25s ease;
 }
 
 .create-post-btn:hover {
+  color: #eaecee;
   opacity: 100%;
 }
 

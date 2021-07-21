@@ -1,6 +1,4 @@
 import React from 'react';
-import CancelButton from '../components/cancel-button';
-import CreatePostButton from '../components/create-post-button';
 import SideSelectButton from '../components/side-select-button';
 
 export default class PostForm extends React.Component {
@@ -29,9 +27,16 @@ export default class PostForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // if (event.target.classList.contains('side-select')) {
+    const button = event.nativeEvent.submitter;
+    if (button.classList.contains('side-select')) {
+      return;
+    }
+    if (button.classList.contains('cancel-btn')) {
+      window.location.hash = '#join';
+      return;
+    }
 
-    // }
+    window.location.hash = '#game';
   }
 
   render() {
@@ -59,8 +64,8 @@ export default class PostForm extends React.Component {
         <div className="row">
           <div className="col d-flex justify-content-end">
             <div className="post-form-buttons d-flex justify-content-between">
-              <CancelButton href="#join" />
-              <CreatePostButton />
+              <button className="cancel-btn">Cancel</button>
+              <button className="create-post-btn">Create</button>
             </div>
           </div>
         </div>

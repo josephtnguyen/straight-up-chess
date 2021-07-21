@@ -12,10 +12,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       navOpen: false,
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      gameDetails: null
     };
     this.handleClickNav = this.handleClickNav.bind(this);
     this.renderPage = this.renderPage.bind(this);
+    this.joinGame = this.joinGame.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +34,10 @@ export default class App extends React.Component {
     }
   }
 
+  joinGame(gameDetails) {
+    this.setState({ gameDetails });
+  }
+
   renderPage() {
     switch (this.state.route) {
       case 'home':
@@ -39,9 +45,9 @@ export default class App extends React.Component {
       case 'join':
         return <JoinGame />;
       case 'post':
-        return <PostForm />;
+        return <PostForm onCreate={this.joinGame} />;
       case 'game':
-        return <Game />;
+        return <Game details={this.state.gameDetails} />;
       default:
         console.log(`Could not find page for ${this.state.route}`); // eslint-disable-line
     }
