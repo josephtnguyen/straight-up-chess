@@ -36,7 +36,24 @@ export default class PostForm extends React.Component {
       return;
     }
 
-    window.location.hash = '#game';
+    const body = {
+      playerName: 'Anonymous',
+      message: this.state.message,
+      playerSide: this.state.side.toLowerCase()
+    };
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch('/api/create-post', req)
+      .then(res => res.json())
+      .then(result => {
+        this.props.onCreate(result);
+        window.location.hash = '#game';
+      });
   }
 
   render() {
