@@ -37,6 +37,8 @@ export default class App extends React.Component {
         return <Home />;
       case 'join':
         return <JoinGame />;
+      case 'post':
+        return <PostForm />;
       default:
         console.log(`Could not find page for ${this.state.route}`); // eslint-disable-line
     }
@@ -49,8 +51,7 @@ export default class App extends React.Component {
       <>
         <Header navOpen={navOpen} handleClickNav={handleClickNav} />
         <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
-        {/* {this.renderPage()} */}
-        <PostForm />
+        {this.renderPage()}
       </>
     );
   }
