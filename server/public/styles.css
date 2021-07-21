@@ -161,6 +161,17 @@ button.gamemode:hover {
   resize: none;
 }
 
+.post-form-buttons {
+  margin: 0.5rem 0;
+  width: 175px;
+}
+
+.cancel-btn,
+.create-post-btn {
+  height: 32px;
+  width: 82px;
+}
+
 .cancel-btn {
   background-color: white;
   color: #32363c;

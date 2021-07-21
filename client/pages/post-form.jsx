@@ -57,9 +57,11 @@ export default class PostForm extends React.Component {
         </div>
 
         <div className="row">
-          <div className="col">
-            <CancelButton href="#join" />
-            <CreatePostButton />
+          <div className="col d-flex justify-content-end">
+            <div className="post-form-buttons d-flex justify-content-between">
+              <CancelButton href="#join" />
+              <CreatePostButton />
+            </div>
           </div>
         </div>
       </form>
