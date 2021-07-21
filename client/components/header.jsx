@@ -5,7 +5,7 @@ export default class Header extends React.Component {
     const { navOpen, handleClickNav } = this.props;
     const hamburgerClass = 'btn hamburger-menu-btn' + (navOpen ? ' selected' : '');
     const avatarStyle = {
-      backgroundImage: 'url(images/default-avatar.svg)'
+      backgroundImage: 'url(images/default-avatar.png)'
     };
     return (
       <div className="header container d-flex justify-content-between align-items-center">
