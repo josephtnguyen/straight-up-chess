@@ -196,3 +196,36 @@ button.gamemode:hover {
 .create-post-btn:hover {
   opacity: 100%;
 }
+
+.board {
+  width: 350px;
+  height: 350px;
+  border: 2px solid black;
+}
+
+.board-row {
+  flex-basis: calc(100% / 8);
+}
+
+.tile {
+  flex-basis: calc(100% / 8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-row:nth-child(odd) > .tile:nth-child(odd) {
+  background-color: #be8647;
+}
+
+.board-row:nth-child(odd) > .tile:nth-child(even) {
+  background-color: #e7d0a7;
+}
+
+.board-row:nth-child(even) > .tile:nth-child(even) {
+  background-color: #be8647;
+}
+
+.board-row:nth-child(even) > .tile:nth-child(odd) {
+  background-color: #e7d0a7;
+}
