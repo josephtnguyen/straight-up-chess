@@ -6,7 +6,7 @@ export default class JoinGame extends React.Component {
     return (
       <div className="join-page container page-height">
         <div className="row">
-          <div className="col d-flex justify-center">
+          <div className="col d-flex justify-content-center">
             <AddPostButton />
           </div>
         </div>
