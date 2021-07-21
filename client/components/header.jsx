@@ -12,7 +12,7 @@ export default class Header extends React.Component {
         <button className={hamburgerClass} onClick={handleClickNav}>
           <img src="images/hamburger-menu.svg" />
         </button>
-        <button className="btn avatar" style={avatarStyle}></button>
+        <button className="btn avatar" style={avatarStyle} />
       </div>
     );
   }

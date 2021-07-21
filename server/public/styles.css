@@ -197,6 +197,31 @@ button.gamemode:hover {
   opacity: 100%;
 }
 
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-palette {
+  background-color: #647ca1;
+  color: #eaecee;
+  border-radius: 5px;
+  margin: 0.5rem;
+  width: 350px;
+  height: 120px;
+}
+
+.palette-avatar {
+  width: 38px;
+  margin: 0.5rem;
+}
+
+.palette-username {
+  font-weight: 300;
+  width: 240px;
+}
+
 .board {
   width: 350px;
   height: 350px;
