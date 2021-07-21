@@ -160,3 +160,8 @@ button.gamemode:hover {
   border-radius: 5px;
   resize: none;
 }
+
+.cancel {
+  background-color: white;
+  color: #32363c;
+}
