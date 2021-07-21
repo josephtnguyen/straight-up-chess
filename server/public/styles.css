@@ -143,3 +143,20 @@ button.gamemode:hover {
 .side-select.selected {
   border: 3px solid #0173fa;
 }
+
+.post-message-div {
+  margin-top: 3rem;
+}
+
+.post-message-title {
+  margin: 0.5rem;
+  font-size: 20px;
+}
+
+.post-message {
+  width: 326px;
+  height: 100px;
+  border: none;
+  border-radius: 5px;
+  resize: none;
+}

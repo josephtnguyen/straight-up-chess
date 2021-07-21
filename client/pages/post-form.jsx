@@ -9,6 +9,8 @@ export default class PostForm extends React.Component {
       message: ''
     };
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSelect(event) {
@@ -19,11 +21,22 @@ export default class PostForm extends React.Component {
     }
   }
 
+  handleMessage(event) {
+    this.setState({ message: event.target.value });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    // if (event.target.classList.contains('side-select')) {
+
+    // }
+  }
+
   render() {
-    const { side } = this.state;
-    const { handleSelect } = this;
+    const { side, message } = this.state;
+    const { handleSelect, handleMessage, handleSubmit } = this;
     return (
-      <div className="post-form container page-height">
+      <form className="post-form container page-height" onSubmit={handleSubmit}>
         <div className="row font-24">
           <div className="col d-flex align-items-center">
             Playing
@@ -31,7 +44,16 @@ export default class PostForm extends React.Component {
             <SideSelectButton type="Black" side={side} handleSelect={handleSelect} />
           </div>
         </div>
-      </div>
+
+        <div className="row">
+          <div className="col post-message-div">
+            <label>
+              <p className="post-message-title">message:</p>
+              <textarea className="post-message" value={message} onChange={handleMessage} />
+            </label>
+          </div>
+        </div>
+      </form>
     );
   }
 }
