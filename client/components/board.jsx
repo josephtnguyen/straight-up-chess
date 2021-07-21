@@ -23,7 +23,7 @@ export default function Board(props) {
         if (tile.piece) {
           const { player: side, piece: type } = tile;
           const src = `/images/${side + type}.svg`;
-          piece = <img src={src} />;
+          piece = <img src={src} className="chess-piece" />;
         }
 
         return (

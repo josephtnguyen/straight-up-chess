@@ -33,7 +33,7 @@ export default class Game extends React.Component {
     return (
       <div className="game container page-height">
         <PlayerPalette player={null} cancelAction={this.cancelGame} />
-        <div>
+        <div className="board-container">
           <ReactBoard board={board} />
         </div>
         <PlayerPalette player={player} />

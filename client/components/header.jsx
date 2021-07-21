@@ -8,7 +8,7 @@ export default class Header extends React.Component {
       backgroundImage: 'url(images/default-avatar.png)'
     };
     return (
-      <div className="header container d-flex justify-content-between align-items-center">
+      <div className="header container-fluid d-flex justify-content-between align-items-center">
         <button className={hamburgerClass} onClick={handleClickNav}>
           <img src="images/hamburger-menu.svg" />
         </button>
