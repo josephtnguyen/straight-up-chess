@@ -5,6 +5,7 @@ import Home from './pages/home';
 import JoinGame from './pages/join-game';
 import parseRoute from './lib/parse-route';
 import PostForm from './pages/post-form';
+import Game from './pages/game';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -39,6 +40,8 @@ export default class App extends React.Component {
         return <JoinGame />;
       case 'post':
         return <PostForm />;
+      case 'game':
+        return <Game />;
       default:
         console.log(`Could not find page for ${this.state.route}`); // eslint-disable-line
     }
