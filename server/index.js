@@ -33,7 +33,7 @@ app.get('/api/get-posts', (req, res, next) => {
 
 app.post('/api/create-post', (req, res, next) => {
   const { playerName, message, playerSide } = req.body;
-  if (!playerName || !message || !playerSide) {
+  if (!playerName || (!message && message !== '') || !playerSide) {
     throw new ClientError(400, 'missing required field');
   }
 

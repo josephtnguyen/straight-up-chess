@@ -10,8 +10,21 @@ export default class Game extends React.Component {
     this.state = {
       board: new Board(),
       gamestate: new GameState(),
-      player: 'w'
+      meta: this.props.details
     };
+    this.cancelGame = this.cancelGame.bind(this);
+  }
+
+  cancelGame() {
+    const { postId } = this.state.meta;
+    const req = {
+      method: 'DELETE'
+    };
+    fetch(`/api/cancel-post/${postId}`, req)
+      .then(res => res.json())
+      .then(result => {
+        window.location.hash = '#join';
+      });
   }
 
   render() {
@@ -19,7 +32,7 @@ export default class Game extends React.Component {
     const player = { username: 'Anonymous' };
     return (
       <div className="game container page-height">
-        <PlayerPalette player={null} />
+        <PlayerPalette player={null} cancelAction={this.cancelGame} />
         <div>
           <ReactBoard board={board} />
         </div>

@@ -6,7 +6,7 @@ export default function PlayerPalette(props) {
     return (
       <div className="player-palette d-flex flex-column justify-content-center align-items-center">
         <p className="font-24 palette-pending">Waiting for challenger...</p>
-        <CancelButton href="#join" />
+        <CancelButton href="#join" cancelAction={props.cancelAction} />
       </div>
     );
   }
