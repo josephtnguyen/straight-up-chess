@@ -11,10 +11,7 @@ export default class JoinGame extends React.Component {
   }
 
   componentDidMount() {
-    const req = {
-      method: 'GET'
-    };
-    fetch('/api/games', req)
+    fetch('/api/games')
       .then(res => res.json())
       .then(result => this.setState({ posts: result }));
   }
