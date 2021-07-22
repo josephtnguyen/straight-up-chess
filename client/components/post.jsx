@@ -10,7 +10,7 @@ export default function Post(props) {
       <div className="row">
         <div className="col-4">
           <div className="post-board-container">
-            <ReactBoard board={board} />
+            <ReactBoard board={board} side={meta.playerSide} />
           </div>
         </div>
         <div className="col post-text">
