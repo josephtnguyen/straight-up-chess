@@ -17,7 +17,7 @@ export default class Game extends React.Component {
   }
 
   componentDidMount() {
-    const [gameId] = parseRoute(window.location.hash).params.values();
+    const gameId = parseRoute(window.location.hash).params.get('gameId');
     const req = {
       method: 'GET'
     };
