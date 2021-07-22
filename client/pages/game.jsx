@@ -3,6 +3,7 @@ import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
 import Board from '../lib/board';
 import GameState from '../lib/gamestate';
+import parseRoute from '../lib/parse-route';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -10,9 +11,21 @@ export default class Game extends React.Component {
     this.state = {
       board: new Board(),
       gamestate: new GameState(),
-      meta: this.props.details
+      meta: null
     };
     this.cancelGame = this.cancelGame.bind(this);
+  }
+
+  componentDidMount() {
+    const [gameId] = parseRoute(window.location.hash).params.values();
+    const req = {
+      method: 'GET'
+    };
+    fetch(`/api/games/${gameId}`, req)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ meta: result });
+      });
   }
 
   cancelGame() {
@@ -29,7 +42,7 @@ export default class Game extends React.Component {
 
   render() {
     const { board, meta } = this.state;
-    const player = { username: meta.playerName };
+    const player = meta ? { username: meta.playerName } : { username: 'Anonymous' };
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">

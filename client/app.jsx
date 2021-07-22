@@ -12,12 +12,10 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       navOpen: false,
-      route: parseRoute(window.location.hash),
-      gameDetails: null
+      route: parseRoute(window.location.hash)
     };
     this.handleClickNav = this.handleClickNav.bind(this);
     this.renderPage = this.renderPage.bind(this);
-    this.joinGame = this.joinGame.bind(this);
   }
 
   componentDidMount() {
@@ -34,10 +32,6 @@ export default class App extends React.Component {
     }
   }
 
-  joinGame(gameDetails) {
-    this.setState({ gameDetails });
-  }
-
   renderPage() {
     switch (this.state.route.path) {
       case 'home':
@@ -45,9 +39,9 @@ export default class App extends React.Component {
       case 'join':
         return <JoinGame />;
       case 'post':
-        return <PostForm onCreate={this.joinGame} />;
+        return <PostForm />;
       case 'game':
-        return <Game details={this.state.gameDetails} />;
+        return <Game />;
       default:
         window.location.hash = '#home';
     }

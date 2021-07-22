@@ -31,6 +31,29 @@ app.get('/api/games', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/games/:gameId', (req, res, next) => {
+  const gameId = req.params.gameId;
+  const gameIdInt = parseInt(gameId);
+  if (!Number.isInteger(gameIdInt)) {
+    throw new ClientError(400, `${gameId} is not a valid gameId`);
+  }
+
+  const sql = `
+  select *
+    from "games"
+   where "gameId" = $1
+  `;
+  const params = [gameId];
+  db.query(sql, params)
+    .then(result => {
+      if (result.rows.length === 0) {
+        throw new ClientError(404, 'no such gameId exists');
+      }
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/games', (req, res, next) => {
   const { playerName, playerSide, message } = req.body;
   if (!playerName || !playerSide || (!message && message !== '')) {
