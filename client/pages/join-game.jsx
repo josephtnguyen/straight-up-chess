@@ -1,5 +1,15 @@
 import React from 'react';
 import AddPostButton from '../components/add-post-button';
+import Post from '../components/post';
+
+const dummy = {
+  createdAt: '2021-07-22T16:11:11.537Z',
+  gameId: 22,
+  message: 'hi hi',
+  opponentName: null,
+  playerName: 'Anonymous',
+  playerSide: 'white'
+};
 
 export default class JoinGame extends React.Component {
   render() {
@@ -13,7 +23,7 @@ export default class JoinGame extends React.Component {
 
         <div className="row">
           <div className="col">
-
+            <Post meta={dummy} />
           </div>
         </div>
       </div>
