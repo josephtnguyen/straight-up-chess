@@ -44,7 +44,7 @@ export default class PostForm extends React.Component {
       .then(res => res.json())
       .then(result => {
         this.props.onCreate(result);
-        window.location.hash = '#game';
+        window.location.hash = `#game?gameId=${result.gameId}`;
       });
   }
 

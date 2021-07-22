@@ -39,7 +39,7 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    switch (this.state.route) {
+    switch (this.state.route.path) {
       case 'home':
         return <Home />;
       case 'join':
