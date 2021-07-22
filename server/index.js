@@ -21,7 +21,8 @@ app.use(staticMiddleware);
 app.get('/api/games', (req, res, next) => {
   const sql = `
   select *
-  from "games"
+    from "games"
+   where "opponentName" is null
   `;
 
   db.query(sql)
