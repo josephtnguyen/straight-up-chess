@@ -63,7 +63,7 @@ export default class PostForm extends React.Component {
         <div className="row">
           <div className="col post-message-div">
             <label className="w-100">
-              <p className="post-message-title">message:</p>
+              <p className="post-message-title">Message</p>
               <textarea className="post-message" value={message} onChange={handleMessage} />
             </label>
           </div>

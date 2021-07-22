@@ -18,10 +18,7 @@ export default class Game extends React.Component {
 
   componentDidMount() {
     const gameId = parseRoute(window.location.hash).params.get('gameId');
-    const req = {
-      method: 'GET'
-    };
-    fetch(`/api/games/${gameId}`, req)
+    fetch(`/api/games/${gameId}`)
       .then(res => res.json())
       .then(result => {
         this.setState({ meta: result });
@@ -42,7 +39,13 @@ export default class Game extends React.Component {
 
   render() {
     const { board, meta } = this.state;
-    const player = meta ? { username: meta.playerName } : { username: 'Anonymous' };
+    const dummy = {
+      username: 'Anonymous',
+      side: 'white'
+    };
+    const player = meta
+      ? { username: meta.playerName, side: meta.playerSide }
+      : dummy;
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">
@@ -53,7 +56,7 @@ export default class Game extends React.Component {
           <div className="col">
 
             <div className="board-container my-2">
-              <ReactBoard board={board} />
+              <ReactBoard board={board} side={player.side} />
             </div>
           </div>
 
