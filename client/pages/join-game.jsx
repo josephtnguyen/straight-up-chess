@@ -23,7 +23,16 @@ export default class JoinGame extends React.Component {
 
         <div className="row">
           <div className="col">
-            <Post meta={dummy} />
+            <div className="scroller px-1 py-2">
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+              <Post meta={dummy} />
+            </div>
           </div>
         </div>
       </div>
