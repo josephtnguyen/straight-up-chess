@@ -30,8 +30,8 @@ export default class PostForm extends React.Component {
 
     const body = {
       playerName: 'Anonymous',
-      message: this.state.message,
-      playerSide: this.state.side.toLowerCase()
+      playerSide: this.state.side.toLowerCase(),
+      message: this.state.message
     };
     const req = {
       method: 'POST',
@@ -40,7 +40,7 @@ export default class PostForm extends React.Component {
       },
       body: JSON.stringify(body)
     };
-    fetch('/api/create-post', req)
+    fetch('/api/games', req)
       .then(res => res.json())
       .then(result => {
         this.props.onCreate(result);

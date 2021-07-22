@@ -49,7 +49,7 @@ export default class App extends React.Component {
       case 'game':
         return <Game details={this.state.gameDetails} />;
       default:
-        console.log(`Could not find page for ${this.state.route}`); // eslint-disable-line
+        window.location.hash = '#home';
     }
   }
 

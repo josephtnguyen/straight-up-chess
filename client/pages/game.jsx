@@ -16,11 +16,11 @@ export default class Game extends React.Component {
   }
 
   cancelGame() {
-    const { postId } = this.state.meta;
+    const { gameId } = this.state.meta;
     const req = {
       method: 'DELETE'
     };
-    fetch(`/api/cancel-post/${postId}`, req)
+    fetch(`/api/games/${gameId}`, req)
       .then(res => res.json())
       .then(result => {
         window.location.hash = '#join';
@@ -28,8 +28,8 @@ export default class Game extends React.Component {
   }
 
   render() {
-    const { board } = this.state;
-    const player = { username: 'Anonymous' };
+    const { board, meta } = this.state;
+    const player = { username: meta.playerName };
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">

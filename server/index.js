@@ -18,10 +18,10 @@ app.use(express.json());
 
 app.use(staticMiddleware);
 
-app.get('/api/get-posts', (req, res, next) => {
+app.get('/api/games', (req, res, next) => {
   const sql = `
   select *
-  from "postedGames"
+  from "games"
   `;
 
   db.query(sql)
@@ -31,18 +31,18 @@ app.get('/api/get-posts', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/create-post', (req, res, next) => {
-  const { playerName, message, playerSide } = req.body;
-  if (!playerName || (!message && message !== '') || !playerSide) {
+app.post('/api/games', (req, res, next) => {
+  const { playerName, playerSide, message } = req.body;
+  if (!playerName || !playerSide || (!message && message !== '')) {
     throw new ClientError(400, 'missing required field');
   }
 
   const sql = `
-  insert into "postedGames" ("playerName", "message", "playerSide")
+  insert into "games" ("playerName", "playerSide", "message")
   values ($1, $2, $3)
   returning *
   `;
-  const params = [playerName, message, playerSide];
+  const params = [playerName, playerSide, message];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
@@ -50,23 +50,23 @@ app.post('/api/create-post', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.delete('/api/cancel-post/:postId', (req, res, next) => {
-  const postId = req.params.postId;
-  const postIdInt = parseInt(postId);
-  if (!Number.isInteger(postIdInt)) {
-    throw new ClientError(400, `${postId} is not a valid postId`);
+app.delete('/api/games/:gameId', (req, res, next) => {
+  const gameId = req.params.gameId;
+  const gameIdInt = parseInt(gameId);
+  if (!Number.isInteger(gameIdInt)) {
+    throw new ClientError(400, `${gameId} is not a valid gameId`);
   }
 
   const sql = `
-  delete from "postedGames"
-        where "postId" = $1
+  delete from "games"
+        where "gameId" = $1
   returning *
   `;
-  const params = [postId];
+  const params = [gameId];
   db.query(sql, params)
     .then(result => {
       if (result.rows.length === 0) {
-        throw new ClientError(404, 'no such postId exists');
+        throw new ClientError(404, 'no such gameId exists');
       }
       res.json(result.rows[0]);
     })
