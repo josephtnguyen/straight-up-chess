@@ -6,16 +6,6 @@ drop schema "public" cascade;
 
 create schema "public";
 
-CREATE TABLE "games" (
-	"gameId" serial NOT NULL,
-	"createdAt" timestamp with time zone NOT NULL default now(),
-	CONSTRAINT "games_pk" PRIMARY KEY ("gameId")
-) WITH (
-  OIDS=FALSE
-);
-
-
-
 CREATE TABLE "moves" (
 	"gameId" integer NOT NULL,
 	"start" integer NOT NULL,
@@ -28,17 +18,17 @@ CREATE TABLE "moves" (
 
 
 
-CREATE TABLE "postedGames" (
-	"postId" serial NOT NULL,
+CREATE TABLE "games" (
+	"gameId" serial NOT NULL,
 	"playerName" TEXT NOT NULL,
-	"message" TEXT NOT NULL,
 	"playerSide" TEXT NOT NULL,
+	"message" TEXT NOT NULL,
+	"opponentName" TEXT,
 	"createdAt" timestamp with time zone NOT NULL default now(),
-	CONSTRAINT "postedGames_pk" PRIMARY KEY ("postId")
+	CONSTRAINT "games_pk" PRIMARY KEY ("gameId")
 ) WITH (
   OIDS=FALSE
 );
-
 
 
 
