@@ -8,13 +8,19 @@ body {
 
 a {
   text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button,
-.cancel-btn,
-.create-post-btn {
+a {
   border: 0;
   border-radius: 5px;
+}
+
+a:hover {
+  color: #eaecee;
 }
 
 .font-24 {
@@ -94,7 +100,7 @@ button,
   padding-top: 7rem;
 }
 
-button.gamemode {
+.gamemode {
   background-color: #4e545e;
   color: #eaecee;
   width: 340px;
@@ -105,7 +111,7 @@ button.gamemode {
   transition: background-color 0.25s ease;
 }
 
-button.gamemode:hover {
+.gamemode:hover {
   background-color: #1a1c20;
 }
 

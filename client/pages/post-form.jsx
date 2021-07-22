@@ -27,14 +27,6 @@ export default class PostForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const button = event.nativeEvent.submitter;
-    if (button.classList.contains('side-select')) {
-      return;
-    }
-    if (button.classList.contains('cancel-btn')) {
-      window.location.hash = '#join';
-      return;
-    }
 
     const body = {
       playerName: 'Anonymous',
@@ -81,7 +73,7 @@ export default class PostForm extends React.Component {
         <div className="row">
           <div className="col d-flex justify-content-end">
             <div className="post-form-buttons d-flex justify-content-between">
-              <button className="cancel-btn">Cancel</button>
+              <a href="#join" className="cancel-btn">Cancel</a>
               <button className="create-post-btn">Create</button>
             </div>
           </div>

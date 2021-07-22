@@ -5,8 +5,6 @@ export default function GameModeButton(props) {
   const text = type === 's' ? 'Singleplayer' : 'Multiplayer';
   const href = type === 's' ? '#singleplayer' : '#join';
   return (
-    <a href={href}>
-      <button className="gamemode">{text}</button>
-    </a>
+    <a href={href} className="gamemode">{text}</a>
   );
 }
