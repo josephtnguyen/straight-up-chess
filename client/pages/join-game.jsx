@@ -11,14 +11,16 @@ export default class JoinGame extends React.Component {
       posts: null,
       socket: io()
     };
+    this.loadGames = this.loadGames.bind(this);
   }
 
   componentDidMount() {
     const { socket } = this.state;
+    socket.on('game joined', () => {
+      this.loadGames();
+    });
     socket.emit('join lobby');
-    fetch('/api/games')
-      .then(res => res.json())
-      .then(result => this.setState({ posts: result }));
+    this.loadGames();
   }
 
   componentWillUnmount() {
@@ -27,6 +29,12 @@ export default class JoinGame extends React.Component {
       socket.emit('game joined');
     }
     this.state.socket.disconnect();
+  }
+
+  loadGames() {
+    fetch('/api/games')
+      .then(res => res.json())
+      .then(result => this.setState({ posts: result }));
   }
 
   render() {
