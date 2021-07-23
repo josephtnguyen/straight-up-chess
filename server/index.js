@@ -19,7 +19,9 @@ const server = http.createServer(app);
 const io = new Server(server); // eslint-disable-line
 
 io.on('connection', socket => {
-
+  socket.on('join lobby', () => {
+    socket.join('lobby');
+  });
 });
 
 app.use(express.json());
