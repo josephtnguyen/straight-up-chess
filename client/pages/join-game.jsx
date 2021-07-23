@@ -28,7 +28,7 @@ export default class JoinGame extends React.Component {
     if (parseRoute(window.location.hash).path === 'game') {
       socket.emit('game joined');
     }
-    this.state.socket.disconnect();
+    socket.disconnect();
   }
 
   loadGames() {

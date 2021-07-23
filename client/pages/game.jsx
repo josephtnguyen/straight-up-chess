@@ -23,8 +23,14 @@ export default class Game extends React.Component {
     fetch(`/api/games/${gameId}`)
       .then(res => res.json())
       .then(result => {
+        const { socket } = this.state;
         this.setState({ meta: result });
+        socket.emit('join room', this.state.meta.gameId);
       });
+  }
+
+  componentWillUnmount() {
+    this.state.socket.disconnect();
   }
 
   cancelGame() {
