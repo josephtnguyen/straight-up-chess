@@ -8,14 +8,14 @@ export default class JoinGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: null,
-      socket: io()
+      posts: null
     };
     this.loadGames = this.loadGames.bind(this);
   }
 
   componentDidMount() {
-    const { socket } = this.state;
+    this.socket = io();
+    const { socket } = this;
     socket.on('game joined', () => {
       this.loadGames();
     });
@@ -24,7 +24,7 @@ export default class JoinGame extends React.Component {
   }
 
   componentWillUnmount() {
-    const { socket } = this.state;
+    const { socket } = this;
     if (parseRoute(window.location.hash).path === 'game') {
       socket.emit('game joined');
     }

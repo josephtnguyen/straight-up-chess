@@ -13,14 +13,15 @@ export default class Game extends React.Component {
       board: new Board(),
       gamestate: new GameState(),
       meta: null,
-      side: null,
-      socket: io()
+      side: null
     };
     this.cancelGame = this.cancelGame.bind(this);
   }
 
   componentDidMount() {
-    this.state.socket.on('room joined', () => {
+    this.socket = io();
+    const { socket } = this;
+    socket.on('room joined', () => {
       const params = parseRoute(window.location.hash).params;
       const gameId = params.get('gameId');
       fetch(`/api/games/${gameId}`)
@@ -36,7 +37,6 @@ export default class Game extends React.Component {
     fetch(`/api/games/${gameId}`)
       .then(res => res.json())
       .then(result => {
-        const { socket } = this.state;
         this.setState({ meta: result, side });
         socket.emit('join room', this.state.meta.gameId);
       });
