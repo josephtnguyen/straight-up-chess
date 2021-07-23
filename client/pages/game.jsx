@@ -61,17 +61,23 @@ export default class Game extends React.Component {
   render() {
     const { board, meta, side } = this.state;
     const dummy = {
-      username: 'Anonymous',
-      side: 'white'
+      username: 'Anonymous'
     };
     let player = dummy;
     let opponent = null;
     if (meta) {
-      player = { username: meta.playerName, side: meta.playerSide };
+      player = { username: meta.playerName };
       if (meta.opponentName) {
-        opponent = { username: meta.opponentName, side: meta.opponentSide };
+        if (side === meta.playerSide) {
+          player = { username: meta.playerName };
+          opponent = { username: meta.opponentName };
+        } else {
+          player = { username: meta.opponentName };
+          opponent = { username: meta.playerName };
+        }
       }
     }
+
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">
