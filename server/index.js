@@ -78,13 +78,13 @@ app.post('/api/games', (req, res, next) => {
   if (!playerName || !playerSide || (!message && message !== '')) {
     throw new ClientError(400, 'missing required field');
   }
-
+  const opponentSide = playerSide === 'white' ? 'black' : 'white';
   const sql = `
-  insert into "games" ("playerName", "playerSide", "message")
-  values ($1, $2, $3)
+  insert into "games" ("message", "playerName", "playerSide", "opponentSide", "resolved")
+  values ($1, $2, $3, $4, FALSE)
   returning *
   `;
-  const params = [playerName, playerSide, message];
+  const params = [message, playerName, playerSide, opponentSide];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
@@ -92,7 +92,7 @@ app.post('/api/games', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.put('/api/games/:gameId', (req, res, next) => {
+app.post('/api/games/:gameId', (req, res, next) => {
   const { opponentName } = req.body;
   if (!opponentName) {
     throw new ClientError(400, 'missing required field');

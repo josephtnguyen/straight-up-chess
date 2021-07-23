@@ -17,7 +17,7 @@ export default class Post extends React.Component {
       opponentName: 'Anonymous'
     };
     const req = {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
