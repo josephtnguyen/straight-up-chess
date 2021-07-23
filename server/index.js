@@ -24,7 +24,7 @@ io.on('connection', socket => {
   });
 
   socket.on('game joined', () => {
-    io.to('lobby').emit('game joined');
+    socket.broadcast.to('lobby').emit('game joined');
   });
 
   socket.on('join room', gameId => {
