@@ -28,7 +28,9 @@ io.on('connection', socket => {
   });
 
   socket.on('join room', gameId => {
-    socket.join(gameId.toString());
+    const room = gameId.toString();
+    socket.join(room);
+    socket.broadcast.to(room).emit('room joined');
   });
 });
 
