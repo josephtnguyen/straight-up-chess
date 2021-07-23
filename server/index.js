@@ -19,7 +19,6 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on('connection', socket => {
-  console.log('a user has connected'); // eslint-disable-line
   socket.on('join lobby', () => {
     socket.join('lobby');
   });
