@@ -1,4 +1,5 @@
 import React from 'react';
+import { io } from 'socket.io-client';
 import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
 import Board from '../lib/board';
@@ -11,7 +12,8 @@ export default class Game extends React.Component {
     this.state = {
       board: new Board(),
       gamestate: new GameState(),
-      meta: null
+      meta: null,
+      socket: io()
     };
     this.cancelGame = this.cancelGame.bind(this);
   }
