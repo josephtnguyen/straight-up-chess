@@ -4,7 +4,7 @@ import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
 import Board from '../lib/board';
 import GameState from '../lib/gamestate';
-import parseRoute from '../lib/parse-route';
+import RouteContext from '../lib/route-context';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -21,9 +21,10 @@ export default class Game extends React.Component {
   componentDidMount() {
     this.socket = io();
     const { socket } = this;
+    const { params } = this.context;
+    const gameId = params.get('gameId');
+    const side = params.get('side');
     socket.on('room joined', () => {
-      const params = parseRoute(window.location.hash).params;
-      const gameId = params.get('gameId');
       fetch(`/api/games/${gameId}`)
         .then(res => res.json())
         .then(result => {
@@ -31,9 +32,6 @@ export default class Game extends React.Component {
         });
     });
 
-    const params = parseRoute(window.location.hash).params;
-    const gameId = params.get('gameId');
-    const side = params.get('side');
     fetch(`/api/games/${gameId}`)
       .then(res => res.json())
       .then(result => {
@@ -109,3 +107,5 @@ export default class Game extends React.Component {
     );
   }
 }
+
+Game.contextType = RouteContext;
