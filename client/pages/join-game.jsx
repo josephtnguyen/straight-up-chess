@@ -2,7 +2,7 @@ import React from 'react';
 import { io } from 'socket.io-client';
 import AddPostButton from '../components/add-post-button';
 import Post from '../components/post';
-import RouteContext from '../lib/route-context';
+import parseRoute from '../lib/parse-route';
 
 export default class JoinGame extends React.Component {
   constructor(props) {
@@ -16,8 +16,8 @@ export default class JoinGame extends React.Component {
   componentDidMount() {
     this.socket = io();
     const { socket } = this;
-    socket.on('game joined', () => {
-      this.loadGames();
+    socket.on('game joined', posts => {
+      this.setState({ posts });
     });
     socket.emit('join lobby');
     this.loadGames();
@@ -25,7 +25,7 @@ export default class JoinGame extends React.Component {
 
   componentWillUnmount() {
     const { socket } = this;
-    if (this.context.path === 'game') {
+    if (parseRoute(window.location.hash).path === 'game') {
       socket.emit('game joined');
     }
     socket.disconnect();
@@ -60,5 +60,3 @@ export default class JoinGame extends React.Component {
     );
   }
 }
-
-JoinGame.contextType = RouteContext;

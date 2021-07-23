@@ -23,8 +23,14 @@ io.on('connection', socket => {
     socket.join('lobby');
   });
 
-  socket.on('game joined', () => {
-    socket.broadcast.to('lobby').emit('game joined');
+  socket.on('game joined', async () => {
+    const sql = `
+    select *
+      from "games"
+    where "opponentName" is null
+    `;
+    const result = await db.query(sql);
+    socket.broadcast.to('lobby').emit('game joined', result.rows);
   });
 
   socket.on('join room', gameId => {
@@ -44,7 +50,6 @@ app.get('/api/games', (req, res, next) => {
     from "games"
    where "opponentName" is null
   `;
-
   db.query(sql)
     .then(result => {
       res.json(result.rows);

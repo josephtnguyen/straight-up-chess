@@ -41,7 +41,7 @@ export default class Game extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.socket.disconnect();
+    this.socket.disconnect();
   }
 
   cancelGame() {
