@@ -13,6 +13,7 @@ export default class Game extends React.Component {
       board: new Board(),
       gamestate: new GameState(),
       meta: null,
+      side: null,
       socket: io()
     };
     this.cancelGame = this.cancelGame.bind(this);
@@ -51,13 +52,18 @@ export default class Game extends React.Component {
       username: 'Anonymous',
       side: 'white'
     };
-    const player = meta
-      ? { username: meta.playerName, side: meta.playerSide }
-      : dummy;
+    let player = dummy;
+    let opponent = null;
+    if (meta) {
+      player = { username: meta.playerName, side: meta.playerSide };
+      if (meta.opponentName) {
+        opponent = { username: meta.opponentName, side: meta.opponentSide };
+      }
+    }
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">
-          <PlayerPalette player={null} cancelAction={this.cancelGame} />
+          <PlayerPalette player={opponent} cancelAction={this.cancelGame} />
         </div>
 
         <div className="w-100 row">
@@ -70,7 +76,7 @@ export default class Game extends React.Component {
 
           <div className="col-auto d-none d-md-block">
             <div className="w-100 p-2">
-              <PlayerPalette player={null} cancelAction={this.cancelGame} />
+              <PlayerPalette player={opponent} cancelAction={this.cancelGame} />
             </div>
             <div className="w-100 p-2">
               <PlayerPalette player={player} />
