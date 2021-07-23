@@ -1,6 +1,7 @@
 import React from 'react';
 import AddPostButton from '../components/add-post-button';
 import Post from '../components/post';
+import { io } from 'socket.io-client';
 
 export default class JoinGame extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ export default class JoinGame extends React.Component {
   }
 
   componentDidMount() {
+    const socket = io(); // eslint-disable-line
     fetch('/api/games')
       .then(res => res.json())
       .then(result => this.setState({ posts: result }));

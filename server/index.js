@@ -16,9 +16,10 @@ const db = new pg.Pool({
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server); // eslint-disable-line
+const io = new Server(server);
 
 io.on('connection', socket => {
+  console.log('a user has connected'); // eslint-disable-line
   socket.on('join lobby', () => {
     socket.join('lobby');
   });
@@ -145,7 +146,7 @@ app.delete('/api/games/:gameId', (req, res, next) => {
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`express server listening on port ${process.env.PORT}`);
+  console.log(`Socket.IO server running at http://localhost:${process.env.PORT}/`);
 });
