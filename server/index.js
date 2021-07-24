@@ -19,6 +19,24 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on('connection', socket => {
+  const { gameId } = socket.handshake.query;
+
+  if (gameId) {
+    const room = gameId.toString();
+    socket.join(room);
+    const sql = `
+    select *
+      from "games"
+    where "gameId" = $1
+    `;
+    const params = [gameId];
+    db.query(sql, params)
+      .then(result => {
+        const meta = result.rows[0];
+        io.to(room).emit('room joined', meta);
+      });
+  }
+
   socket.on('join lobby', () => {
     socket.join('lobby');
   });
@@ -27,16 +45,10 @@ io.on('connection', socket => {
     const sql = `
     select *
       from "games"
-    where "opponentName" is null
+     where "opponentName" is null
     `;
     const result = await db.query(sql);
     socket.broadcast.to('lobby').emit('game joined', result.rows);
-  });
-
-  socket.on('join room', gameId => {
-    const room = gameId.toString();
-    socket.join(room);
-    socket.broadcast.to(room).emit('room joined');
   });
 });
 

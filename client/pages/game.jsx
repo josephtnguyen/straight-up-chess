@@ -13,31 +13,27 @@ export default class Game extends React.Component {
       board: new Board(),
       gamestate: new GameState(),
       meta: null,
-      side: null
+      side: 'white'
     };
     this.cancelGame = this.cancelGame.bind(this);
   }
 
   componentDidMount() {
-    this.socket = io();
-    const { socket } = this;
     const { params } = this.context;
     const gameId = params.get('gameId');
     const side = params.get('side');
-    socket.on('room joined', () => {
-      fetch(`/api/games/${gameId}`)
-        .then(res => res.json())
-        .then(result => {
-          this.setState({ meta: result });
-        });
-    });
+    this.socket = io('/', { query: { gameId } });
 
-    fetch(`/api/games/${gameId}`)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ meta: result, side });
-        socket.emit('join room', this.state.meta.gameId);
-      });
+    this.socket.on('room joined', meta => {
+      if (this.state.meta) {
+        if (this.state.meta.opponentName) {
+          return;
+        }
+        this.setState({ meta });
+        return;
+      }
+      this.setState({ meta, side });
+    });
   }
 
   componentWillUnmount() {
