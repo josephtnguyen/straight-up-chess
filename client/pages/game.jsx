@@ -29,8 +29,6 @@ export default class Game extends React.Component {
         if (this.state.meta.opponentName) {
           return;
         }
-        this.setState({ meta });
-        return;
       }
       this.setState({ meta, side });
     });
