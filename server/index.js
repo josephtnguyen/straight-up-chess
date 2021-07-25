@@ -34,6 +34,10 @@ io.on('connection', socket => {
       .then(result => {
         const meta = result.rows[0];
         io.to(room).emit('room joined', meta);
+      })
+      .catch(err => {
+        console.error(err);
+        socket.disconnect();
       });
   }
 
@@ -41,14 +45,20 @@ io.on('connection', socket => {
     socket.join('lobby');
   });
 
-  socket.on('game joined', async () => {
+  socket.on('game joined', () => {
     const sql = `
     select *
       from "games"
      where "opponentName" is null
     `;
-    const result = await db.query(sql);
-    socket.broadcast.to('lobby').emit('game joined', result.rows);
+    db.query(sql)
+      .then(result => {
+        socket.broadcast.to('lobby').emit('game joined', result.rows);
+      })
+      .catch(err => {
+        console.error(err);
+        socket.disconnect();
+      });
   });
 });
 

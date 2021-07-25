@@ -19,6 +19,11 @@ export default class JoinGame extends React.Component {
     socket.on('game joined', posts => {
       this.setState({ posts });
     });
+    socket.on('disconnect', reason => {
+      if (reason === 'io client disconnect') {
+        console.log({ error: 'an unexpected error occurred' }); // eslint-disable-line
+      }
+    });
     socket.emit('join lobby');
     this.loadGames();
   }
