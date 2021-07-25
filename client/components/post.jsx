@@ -5,14 +5,11 @@ import Board from '../lib/board';
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      meta: this.props.meta
-    };
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleSelect() {
-    const { meta } = this.state;
+    const { meta } = this.props;
     const body = {
       opponentName: 'Anonymous'
     };

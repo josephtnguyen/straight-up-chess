@@ -2,13 +2,12 @@ import React from 'react';
 import { io } from 'socket.io-client';
 import AddPostButton from '../components/add-post-button';
 import Post from '../components/post';
-import parseRoute from '../lib/parse-route';
 
 export default class JoinGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: null
+      posts: []
     };
     this.loadGames = this.loadGames.bind(this);
   }
@@ -16,24 +15,22 @@ export default class JoinGame extends React.Component {
   componentDidMount() {
     this.socket = io();
     const { socket } = this;
-    socket.on('game joined', posts => {
+    socket.on('game joined', removed => {
+      const posts = this.state.posts.filter(post => post.gameId !== removed.gameId);
       this.setState({ posts });
     });
     socket.on('disconnect', reason => {
-      if (reason === 'io client disconnect') {
-        console.log({ error: 'an unexpected error occurred' }); // eslint-disable-line
+      if (reason === 'io server disconnect') {
+        console.error({ error: 'an unexpected error occurred' });
       }
     });
     socket.emit('join lobby');
+
     this.loadGames();
   }
 
   componentWillUnmount() {
-    const { socket } = this;
-    if (parseRoute(window.location.hash).path === 'game') {
-      socket.emit('game joined');
-    }
-    socket.disconnect();
+    this.socket.disconnect();
   }
 
   loadGames() {
@@ -43,9 +40,7 @@ export default class JoinGame extends React.Component {
   }
 
   render() {
-    const posts = this.state.posts
-      ? this.state.posts.map(post => <Post key={post.gameId} meta={post} />)
-      : null;
+    const posts = this.state.posts.map(post => <Post key={post.gameId} meta={post} />);
     return (
       <div className="join-page container page-height w-100">
         <div className="row">

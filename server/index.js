@@ -34,6 +34,7 @@ io.on('connection', socket => {
       .then(result => {
         const meta = result.rows[0];
         io.to(room).emit('room joined', meta);
+        io.to('lobby').emit('game joined', meta);
       })
       .catch(err => {
         console.error(err);
@@ -43,22 +44,6 @@ io.on('connection', socket => {
 
   socket.on('join lobby', () => {
     socket.join('lobby');
-  });
-
-  socket.on('game joined', () => {
-    const sql = `
-    select *
-      from "games"
-     where "opponentName" is null
-    `;
-    db.query(sql)
-      .then(result => {
-        socket.broadcast.to('lobby').emit('game joined', result.rows);
-      })
-      .catch(err => {
-        console.error(err);
-        socket.disconnect();
-      });
   });
 });
 
