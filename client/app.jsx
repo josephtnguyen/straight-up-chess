@@ -3,9 +3,10 @@ import Header from './components/header';
 import Nav from './components/nav';
 import Home from './pages/home';
 import JoinGame from './pages/join-game';
-import parseRoute from './lib/parse-route';
 import PostForm from './pages/post-form';
 import Game from './pages/game';
+import parseRoute from './lib/parse-route';
+import RouteContext from './lib/route-context';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -51,11 +52,13 @@ export default class App extends React.Component {
     const { navOpen } = this.state;
     const { handleClickNav } = this;
     return (
-      <>
-        <Header navOpen={navOpen} handleClickNav={handleClickNav} />
-        <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
-        {this.renderPage()}
-      </>
+      <RouteContext.Provider value={this.state.route}>
+        <>
+          <Header navOpen={navOpen} handleClickNav={handleClickNav} />
+          <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
+          {this.renderPage()}
+        </>
+      </RouteContext.Provider>
     );
   }
 }

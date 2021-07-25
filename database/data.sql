@@ -1,4 +1,4 @@
-insert into "games" ("playerName", "playerSide", "message")
-values ('Anonymous', 'black', 'play me'),
-       ('username12', 'white', 'please go easy on me ;)')
+insert into "games" ("message", "playerName", "playerSide", "opponentSide", "resolved")
+values ('play me', 'Anonymous', 'black', 'white', FALSE),
+       ('please go easy on me ;)', 'username12', 'white', 'black', FALSE)
 returning *;

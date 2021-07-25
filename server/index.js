@@ -1,9 +1,11 @@
 require('dotenv/config');
 const express = require('express');
+const pg = require('pg');
+const http = require('http');
+const { Server } = require('socket.io');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const ClientError = require('./client-error');
-const pg = require('pg');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -13,6 +15,37 @@ const db = new pg.Pool({
 });
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on('connection', socket => {
+  const { gameId } = socket.handshake.query;
+
+  if (gameId) {
+    const room = gameId.toString();
+    socket.join(room);
+    const sql = `
+    select *
+      from "games"
+    where "gameId" = $1
+    `;
+    const params = [gameId];
+    db.query(sql, params)
+      .then(result => {
+        const meta = result.rows[0];
+        io.to(room).emit('room joined', meta);
+        io.to('lobby').emit('game joined', meta);
+      })
+      .catch(err => {
+        console.error(err);
+        socket.disconnect();
+      });
+  }
+
+  socket.on('join lobby', () => {
+    socket.join('lobby');
+  });
+});
 
 app.use(express.json());
 
@@ -24,7 +57,6 @@ app.get('/api/games', (req, res, next) => {
     from "games"
    where "opponentName" is null
   `;
-
   db.query(sql)
     .then(result => {
       res.json(result.rows);
@@ -60,15 +92,43 @@ app.post('/api/games', (req, res, next) => {
   if (!playerName || !playerSide || (!message && message !== '')) {
     throw new ClientError(400, 'missing required field');
   }
-
+  const opponentSide = playerSide === 'white' ? 'black' : 'white';
   const sql = `
-  insert into "games" ("playerName", "playerSide", "message")
-  values ($1, $2, $3)
+  insert into "games" ("message", "playerName", "playerSide", "opponentSide", "resolved")
+  values ($1, $2, $3, $4, FALSE)
   returning *
   `;
-  const params = [playerName, playerSide, message];
+  const params = [message, playerName, playerSide, opponentSide];
   db.query(sql, params)
     .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/games/:gameId', (req, res, next) => {
+  const { opponentName } = req.body;
+  if (!opponentName) {
+    throw new ClientError(400, 'missing required field');
+  }
+  const gameId = req.params.gameId;
+  const gameIdInt = parseInt(gameId);
+  if (!Number.isInteger(gameIdInt)) {
+    throw new ClientError(400, `${gameId} is not a valid gameId`);
+  }
+
+  const sql = `
+  update "games"
+     set "opponentName" = $2
+   where "gameId" = $1
+  returning *
+  `;
+  const params = [gameId, opponentName];
+  db.query(sql, params)
+    .then(result => {
+      if (result.rows.length === 0) {
+        throw new ClientError(404, 'no such gameId exists');
+      }
       res.json(result.rows[0]);
     })
     .catch(err => next(err));
@@ -99,7 +159,7 @@ app.delete('/api/games/:gameId', (req, res, next) => {
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`express server listening on port ${process.env.PORT}`);
+  console.log(`Socket.IO server running at http://localhost:${process.env.PORT}/`);
 });
