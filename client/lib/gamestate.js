@@ -3,8 +3,6 @@ export default class GameState {
     this.turn = 'wb';
     this.nextTurn = 'bw';
     this.turnNum = 1;
-    this.seeingOptions = false;
-    this.start = 0;
 
     this.check = {
       wb: false,
