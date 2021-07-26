@@ -4,7 +4,7 @@ import Coords from '../lib/coords';
 const coords = new Coords();
 
 export default function Board(props) {
-  const { board, side } = props;
+  const { board, side, highlighted, selected } = props;
   const rows = [];
   let row = [];
   for (const coord of coords) {
@@ -30,8 +30,11 @@ export default function Board(props) {
             piece = <img src={src} className="chess-piece" />;
           }
 
+          const highlight = highlighted.includes(coord) ? ' highlighted' : '';
+          const select = selected === coord ? ' selected' : '';
+          const tileClass = 'tile' + highlight + select;
           return (
-            <div key={coord} className="tile" id={coord}>
+            <div key={coord} className={tileClass} id={coord}>
               {piece}
             </div>
           );
