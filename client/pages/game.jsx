@@ -29,6 +29,7 @@ export default class Game extends React.Component {
     this.checkScan = this.checkScan.bind(this);
     this.drawScan = this.drawScan.bind(this);
     this.castleScan = this.castleScan.bind(this);
+    this.pawnScan = this.pawnScan.bind(this);
   }
 
   componentDidMount() {
@@ -105,7 +106,7 @@ export default class Game extends React.Component {
 
   decideMove(end) {
     const { board, gamestate, highlighted, selected } = this.state;
-    const { checkmateScan, checkScan, drawScan, castleScan } = this;
+    const { checkmateScan, checkScan, drawScan, castleScan, pawnScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -138,7 +139,7 @@ export default class Game extends React.Component {
     movePiece(nextBoard, selected, end);
 
     // apply scans
-    // pawnScan(board, gamestate);
+    pawnScan(nextBoard, nextGamestate);
     checkmateScan(nextBoard, nextGamestate);
     drawScan(nextBoard, nextGamestate);
     checkScan(nextBoard, nextGamestate);
@@ -345,6 +346,22 @@ export default class Game extends React.Component {
     }
   }
 
+  pawnScan(board, gamestate) {
+    for (let i = 81; i < 89; i++) {
+      if (board[i].piece === 'p') {
+        gamestate.promoting = board[i];
+        return;
+      }
+    }
+
+    for (let i = 11; i < 19; i++) {
+      if (board[i].piece === 'p') {
+        gamestate.promoting = board[i];
+        return;
+      }
+    }
+  }
+
   render() {
     const { board, meta, side, selected, highlighted } = this.state;
     const dummy = {
@@ -460,7 +477,6 @@ function findMoveSpace(board, turn, start, killsOnly, gamestate) {
   const moveSpace = [];
 
   if (piece === 'p') {
-    // turn is 'wb' or 'bw' where turn[0] is the current turn
     if (board[start].player === 'w') {
       // starting moves
       if (!killsOnly) {
