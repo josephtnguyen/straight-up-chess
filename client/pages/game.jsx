@@ -28,6 +28,7 @@ export default class Game extends React.Component {
     this.checkmateScan = this.checkmateScan.bind(this);
     this.checkScan = this.checkScan.bind(this);
     this.drawScan = this.drawScan.bind(this);
+    this.castleScan = this.castleScan.bind(this);
   }
 
   componentDidMount() {
@@ -104,7 +105,7 @@ export default class Game extends React.Component {
 
   decideMove(end) {
     const { board, gamestate, highlighted, selected } = this.state;
-    const { checkmateScan, checkScan, drawScan } = this;
+    const { checkmateScan, checkScan, drawScan, castleScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -141,7 +142,7 @@ export default class Game extends React.Component {
     checkmateScan(nextBoard, nextGamestate);
     drawScan(nextBoard, nextGamestate);
     checkScan(nextBoard, nextGamestate);
-    // castleScan(board, gamestate);
+    castleScan(nextBoard, nextGamestate);
 
     // change turn
     changeTurn(nextGamestate);
@@ -328,6 +329,19 @@ export default class Game extends React.Component {
     }
     if (gamestate.draw) {
       console.log(`Draw by ${gamestate.drawCase}`); // eslint-disable-line
+    }
+  }
+
+  castleScan(board, gamestate) {
+    // check if pieces have moved
+    checkIfMoved(gamestate, board);
+
+    for (const runway of ['wk', 'wq', 'bk', 'bq']) {
+      // see if runway is clear
+      const isOpen = isRunwayOpen(board, runway, gamestate);
+
+      // change castling status when possible
+      updateCastling(gamestate, runway, isOpen);
     }
   }
 
@@ -649,6 +663,39 @@ function findEnemyMoveSpace(board, turn, gamestate) {
   return [...enemyMoveSpace];
 }
 
+function isRunwayOpen(board, region, gamestate) {
+  let runway, kingRunway, enemyMoveSpace;
+  if (region === 'wk') {
+    runway = [16, 17];
+    kingRunway = [16, 17];
+    enemyMoveSpace = findEnemyMoveSpace(board, 'wb', gamestate);
+  } else if (region === 'wq') {
+    runway = [12, 13, 14];
+    kingRunway = [13, 14];
+    enemyMoveSpace = findEnemyMoveSpace(board, 'wb', gamestate);
+  } else if (region === 'bk') {
+    runway = [86, 87];
+    kingRunway = [86, 87];
+    enemyMoveSpace = findEnemyMoveSpace(board, 'bw', gamestate);
+  } else if (region === 'bq') {
+    runway = [82, 83, 84];
+    kingRunway = [83, 84];
+    enemyMoveSpace = findEnemyMoveSpace(board, 'bw', gamestate);
+  }
+
+  for (const coord of runway) {
+    if (!isEmptyAt(board, coord)) {
+      return false;
+    }
+  }
+  for (const coord of kingRunway) {
+    if (enemyMoveSpace.includes(coord)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function isViableStart(board, gamestate, start, turn) {
   if (board[start].player !== turn[0]) {
     return false;
@@ -705,4 +752,52 @@ function changeTurn(gamestate) {
   }
   gamestate.nextTurn = gamestate.turn;
   gamestate.turn = gamestate.turn[1] + gamestate.turn[0];
+}
+
+function checkIfMoved(gamestate, board) {
+  const coords = [15, 85, 18, 11, 88, 81];
+  const movedKeys = [
+    'whiteKingMoved',
+    'blackKingMoved',
+    'whiteKingRookMoved',
+    'whiteQueenRookMoved',
+    'blackKingRookMoved',
+    'blackQueenRookMoved'
+  ];
+  for (let i = 0; i < movedKeys.length; i++) {
+    if (isEmptyAt(board, coords[i])) {
+      gamestate[movedKeys[i]] = true;
+    }
+  }
+}
+
+function updateCastling(gamestate, runway, runwayOpen) {
+  let turn, kingMovedKey, rookMovedKey, canCastleKey;
+  if (runway === 'wk') {
+    turn = 'wb';
+    kingMovedKey = 'whiteKingMoved';
+    rookMovedKey = 'whiteKingRookMoved';
+    canCastleKey = 'whiteKingCanCastle';
+  } else if (runway === 'wq') {
+    turn = 'wb';
+    kingMovedKey = 'whiteKingMoved';
+    rookMovedKey = 'whiteQueenRookMoved';
+    canCastleKey = 'whiteQueenCanCastle';
+  } else if (runway === 'bk') {
+    turn = 'bw';
+    kingMovedKey = 'blackKingMoved';
+    rookMovedKey = 'blackKingRookMoved';
+    canCastleKey = 'blackKingCanCastle';
+  } else if (runway === 'bq') {
+    turn = 'bw';
+    kingMovedKey = 'blackKingMoved';
+    rookMovedKey = 'blackQueenRookMoved';
+    canCastleKey = 'blackQueenCanCastle';
+  }
+
+  if (runwayOpen && !gamestate[kingMovedKey] && !gamestate[rookMovedKey] && !gamestate.check[turn]) {
+    gamestate[canCastleKey] = true;
+  } else {
+    gamestate[canCastleKey] = false;
+  }
 }
