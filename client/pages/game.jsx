@@ -25,6 +25,7 @@ export default class Game extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.showOptions = this.showOptions.bind(this);
     this.decideMove = this.decideMove.bind(this);
+    this.checkmateScan = this.checkmateScan.bind(this);
   }
 
   componentDidMount() {
@@ -97,6 +98,7 @@ export default class Game extends React.Component {
 
   decideMove(end) {
     const { board, gamestate, highlighted, selected } = this.state;
+    const { checkmateScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -130,7 +132,7 @@ export default class Game extends React.Component {
 
     // apply scans
     // pawnScan(board, gamestate);
-    // checkmateScan(board, gamestate);
+    checkmateScan(nextBoard, nextGamestate);
     // drawScan(board, gamestate);
     // checkScan(board, gamestate);
     // castleScan(board, gamestate);
@@ -144,6 +146,62 @@ export default class Game extends React.Component {
       selected: 0,
       highlighted: []
     });
+  }
+
+  checkmateScan(board, gamestate) {
+    const enemyCoords = [];
+
+    // find location of all enemies
+    for (const coord of coords) {
+      if (board[coord]) {
+        if (board[coord].player === gamestate.turn[1]) {
+          enemyCoords.push(coord);
+        }
+      }
+    }
+
+    // return if there is no checkmate
+    for (const enemyCoord of enemyCoords) {
+      if (isViableStart(board, gamestate, enemyCoord, gamestate.nextTurn)) {
+        return;
+      }
+    }
+
+    // otherwise checkmate
+    const nextGamestate = copy(gamestate);
+    nextGamestate.checkmate = true;
+    this.setState({ gamestate: nextGamestate });
+    console.log('Checkmate!!'); // eslint-disable-line
+  }
+
+  checkScan(board, gamestate) {
+    if (gamestate.checkmate) {
+      return;
+    }
+
+    const allyMoveSpace = findEnemyMoveSpace(board, gamestate.nextTurn, gamestate);
+
+    // find enemy king coord after move
+    let kingCoord;
+    for (const coord of coords) {
+      if (board[coord].player === gamestate.turn[1] && board[coord].piece === 'k') {
+        kingCoord = coord;
+        break;
+      }
+    }
+
+    // change gamestate if there is check
+    const nextGamestate = copy(gamestate);
+    nextGamestate.check[gamestate.turn] = false;
+    if (allyMoveSpace.includes(kingCoord)) {
+      nextGamestate.check[gamestate.nextTurn] = true;
+      console.log('Check!'); // eslint-disable-line
+    }
+
+    // if there is no check
+    console.log('no check'); // eslint-disable-line
+
+    this.setState({ gamestate: nextGamestate });
   }
 
   render() {
@@ -464,8 +522,29 @@ function findEnemyMoveSpace(board, turn, gamestate) {
   return [...enemyMoveSpace];
 }
 
+function isViableStart(board, gamestate, start, turn) {
+  if (board[start].player !== turn[0]) {
+    return false;
+  }
+
+  // find move space of start
+  const moveSpace = findMoveSpace(board, turn, start, false, gamestate);
+  if (!moveSpace) {
+    return false;
+  }
+
+  // is viable start if it has viable moves
+  for (let i = 0; i < moveSpace.length; i++) {
+    if (isViableMove(board, turn, start, moveSpace[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function isViableMove(board, gamestate, turn, start, end) {
-  const potentialBoard = { ...board };
+  const potentialBoard = copy(board);
   movePiece(potentialBoard, start, end);
   const enemyMoveSpace = findEnemyMoveSpace(potentialBoard, turn, gamestate);
 
