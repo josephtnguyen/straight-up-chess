@@ -26,6 +26,7 @@ export default class Game extends React.Component {
     this.showOptions = this.showOptions.bind(this);
     this.decideMove = this.decideMove.bind(this);
     this.checkmateScan = this.checkmateScan.bind(this);
+    this.checkScan = this.checkScan.bind(this);
   }
 
   componentDidMount() {
@@ -80,6 +81,10 @@ export default class Game extends React.Component {
       return;
     }
 
+    if (!isViableStart(board, gamestate, start, gamestate.turn)) {
+      return;
+    }
+
     // find all potential moves
     const highlighted = [];
     const moveSpace = findMoveSpace(board, gamestate.turn, start, false, gamestate);
@@ -98,7 +103,7 @@ export default class Game extends React.Component {
 
   decideMove(end) {
     const { board, gamestate, highlighted, selected } = this.state;
-    const { checkmateScan } = this;
+    const { checkmateScan, checkScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -134,7 +139,7 @@ export default class Game extends React.Component {
     // pawnScan(board, gamestate);
     checkmateScan(nextBoard, nextGamestate);
     // drawScan(board, gamestate);
-    // checkScan(board, gamestate);
+    checkScan(nextBoard, nextGamestate);
     // castleScan(board, gamestate);
 
     // change turn
@@ -168,9 +173,7 @@ export default class Game extends React.Component {
     }
 
     // otherwise checkmate
-    const nextGamestate = copy(gamestate);
-    nextGamestate.checkmate = true;
-    this.setState({ gamestate: nextGamestate });
+    gamestate.checkmate = true;
     console.log('Checkmate!!'); // eslint-disable-line
   }
 
@@ -191,17 +194,11 @@ export default class Game extends React.Component {
     }
 
     // change gamestate if there is check
-    const nextGamestate = copy(gamestate);
-    nextGamestate.check[gamestate.turn] = false;
+    gamestate.check[gamestate.turn] = false;
     if (allyMoveSpace.includes(kingCoord)) {
-      nextGamestate.check[gamestate.nextTurn] = true;
+      gamestate.check[gamestate.nextTurn] = true;
       console.log('Check!'); // eslint-disable-line
     }
-
-    // if there is no check
-    console.log('no check'); // eslint-disable-line
-
-    this.setState({ gamestate: nextGamestate });
   }
 
   render() {
@@ -535,7 +532,7 @@ function isViableStart(board, gamestate, start, turn) {
 
   // is viable start if it has viable moves
   for (let i = 0; i < moveSpace.length; i++) {
-    if (isViableMove(board, turn, start, moveSpace[i])) {
+    if (isViableMove(board, gamestate, turn, start, moveSpace[i])) {
       return true;
     }
   }
