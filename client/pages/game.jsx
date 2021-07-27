@@ -33,7 +33,8 @@ export default class Game extends React.Component {
       highlighted: [],
       whiteDead: [],
       blackDead: [],
-      showCheck: 0
+      showCheck: 0,
+      showCheckmate: 0
     };
     this.cancelGame = this.cancelGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -79,10 +80,14 @@ export default class Game extends React.Component {
           nextBlackDead.push(killed);
         }
       }
-      // display check if necessary
+      // display banners when applicable
       let showCheck = 0;
+      let showCheckmate = 0;
       if (nextGamestate.check.wb || nextGamestate.check.bw) {
         showCheck = setTimeout(this.removeBanner, 2000);
+      }
+      if (nextGamestate.checkmate) {
+        showCheckmate = setTimeout(this.removeBanner, 2000);
       }
       this.setState({
         board: nextBoard,
@@ -90,7 +95,8 @@ export default class Game extends React.Component {
         phase: 'selecting',
         whiteDead: nextWhiteDead,
         blackDead: nextBlackDead,
-        showCheck
+        showCheck,
+        showCheckmate
       });
     });
   }
@@ -179,10 +185,14 @@ export default class Game extends React.Component {
       }
     }
 
-    // display check if necessary
+    // display banners when applicable
     let showCheck = 0;
+    let showCheckmate = 0;
     if (nextGamestate.check.wb || nextGamestate.check.bw) {
       showCheck = setTimeout(this.removeBanner, 2000);
+    }
+    if (nextGamestate.checkmate) {
+      showCheckmate = setTimeout(this.removeBanner, 2000);
     }
 
     const body = {
@@ -205,7 +215,8 @@ export default class Game extends React.Component {
       highlighted: [],
       whiteDead: nextWhiteDead,
       blackDead: nextBlackDead,
-      showCheck
+      showCheck,
+      showCheckmate
     });
   }
 
@@ -247,12 +258,13 @@ export default class Game extends React.Component {
 
   removeBanner() {
     this.setState({
-      showCheck: 0
+      showCheck: 0,
+      showCheckmate: 0
     });
   }
 
   render() {
-    const { board, meta, side, selected, highlighted, whiteDead, blackDead, showCheck } = this.state;
+    const { board, meta, side, selected, highlighted, whiteDead, blackDead, showCheck, showCheckmate } = this.state;
     const dummy = {
       username: 'Anonymous'
     };
@@ -284,6 +296,7 @@ export default class Game extends React.Component {
 
             <div className="board-container my-1" onClick={this.handleClick}>
               <Banner message={'Check'} show={showCheck} />
+              <Banner message={'Checkmate'} show={showCheckmate} />
               <ReactBoard board={board} highlighted={highlighted} selected={selected} side={side} />
             </div>
           </div>

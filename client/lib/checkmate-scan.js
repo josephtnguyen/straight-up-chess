@@ -24,5 +24,4 @@ export default function checkmateScan(board, gamestate) {
 
   // otherwise checkmate
   gamestate.checkmate = true;
-  console.log('Checkmate!!'); // eslint-disable-line
 }
