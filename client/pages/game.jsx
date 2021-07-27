@@ -25,6 +25,8 @@ export default class Game extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.showOptions = this.showOptions.bind(this);
     this.decideMove = this.decideMove.bind(this);
+    this.executeMove = this.executeMove.bind(this);
+
     this.checkmateScan = this.checkmateScan.bind(this);
     this.checkScan = this.checkScan.bind(this);
     this.drawScan = this.drawScan.bind(this);
@@ -45,6 +47,22 @@ export default class Game extends React.Component {
         }
       }
       this.setState({ meta, side });
+    });
+
+    this.socket.on('move made', move => {
+      const { board, gamestate } = this.state;
+      const { start, end } = move;
+      if (!board[start].piece) {
+        return;
+      }
+
+      const nextBoard = copy(board);
+      const nextGamestate = copy(gamestate);
+      this.executeMove(nextBoard, nextGamestate, start, end);
+      this.setState({
+        board: nextBoard,
+        gamestate: nextGamestate
+      });
     });
   }
 
@@ -103,7 +121,6 @@ export default class Game extends React.Component {
 
   decideMove(end) {
     const { board, gamestate, highlighted, selected, meta } = this.state;
-    const { checkmateScan, checkScan, drawScan, castleScan, pawnScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -116,34 +133,8 @@ export default class Game extends React.Component {
     const nextBoard = copy(board);
     const nextGamestate = copy(gamestate);
 
-    // update draw counter
-    if (board[end].piece) {
-      nextGamestate.pawnOrKillCounter = 0;
-    } else if (board[selected].piece === 'p') {
-      nextGamestate.pawnOrKillCounter = 0;
-    } else {
-      nextGamestate.pawnOrKillCounter++;
-    }
+    this.executeMove(nextBoard, nextGamestate, selected, end);
 
-    // record en passant
-    if (board[selected].piece === 'p' && (selected > 20 && selected < 29) && (end > 40 && end < 49)) {
-      nextGamestate.enPassantWhite = selected;
-    } else if (board[selected].piece === 'p' && (selected > 70 && selected < 79) && (end > 50 && end < 59)) {
-      nextGamestate.enPassantBlack = selected;
-    }
-
-    // move piece
-    movePiece(nextBoard, selected, end);
-
-    // apply scans
-    pawnScan(nextBoard, nextGamestate);
-    checkmateScan(nextBoard, nextGamestate);
-    drawScan(nextBoard, nextGamestate);
-    checkScan(nextBoard, nextGamestate);
-    castleScan(nextBoard, nextGamestate);
-
-    // change turn
-    changeTurn(nextGamestate);
     const body = {
       start: selected,
       end: end
@@ -163,6 +154,39 @@ export default class Game extends React.Component {
       selected: 0,
       highlighted: []
     });
+  }
+
+  executeMove(board, gamestate, start, end) {
+    const { checkmateScan, checkScan, drawScan, castleScan, pawnScan } = this;
+
+    // update draw counter
+    if (board[end].piece) {
+      gamestate.pawnOrKillCounter = 0;
+    } else if (board[start].piece === 'p') {
+      gamestate.pawnOrKillCounter = 0;
+    } else {
+      gamestate.pawnOrKillCounter++;
+    }
+
+    // record en passant
+    if (board[start].piece === 'p' && (start > 20 && start < 29) && (end > 40 && end < 49)) {
+      gamestate.enPassantWhite = start;
+    } else if (board[start].piece === 'p' && (start > 70 && start < 79) && (end > 50 && end < 59)) {
+      gamestate.enPassantBlack = start;
+    }
+
+    // move piece
+    movePiece(board, start, end);
+
+    // apply scans
+    pawnScan(board, gamestate);
+    checkmateScan(board, gamestate);
+    drawScan(board, gamestate);
+    checkScan(board, gamestate);
+    castleScan(board, gamestate);
+
+    // change turn
+    changeTurn(gamestate);
   }
 
   checkmateScan(board, gamestate) {
