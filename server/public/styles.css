@@ -263,7 +263,7 @@ a:hover {
   color: #eaecee;
   border-radius: 5px;
   width: 100%;
-  height: 120px;
+  height: 132px;
 }
 
 .palette-avatar {
@@ -326,6 +326,11 @@ a:hover {
 .chess-piece {
   height: 60%;
   width: 60%;
+}
+
+.dead.chess-piece {
+  height: 28px;
+  width: 28px;
 }
 
 .tile.selected {

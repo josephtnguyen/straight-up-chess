@@ -29,7 +29,9 @@ export default class Game extends React.Component {
       side: 'white',
       phase: 'selecting',
       selected: 0,
-      highlighted: []
+      highlighted: [],
+      whiteDead: [],
+      blackDead: []
     };
     this.cancelGame = this.cancelGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -55,7 +57,7 @@ export default class Game extends React.Component {
     });
 
     this.socket.on('move made', move => {
-      const { board, gamestate } = this.state;
+      const { board, gamestate, whiteDead, blackDead } = this.state;
       const { start, end } = move;
       if (!board[start].piece) {
         return;
@@ -63,11 +65,22 @@ export default class Game extends React.Component {
 
       const nextBoard = copy(board);
       const nextGamestate = copy(gamestate);
-      this.executeMove(nextBoard, nextGamestate, start, end);
+      const killed = this.executeMove(nextBoard, nextGamestate, start, end);
+      const nextWhiteDead = whiteDead;
+      const nextBlackDead = blackDead;
+      if (killed) {
+        if (killed[0] === 'w') {
+          nextWhiteDead.push(killed);
+        } else {
+          nextBlackDead.push(killed);
+        }
+      }
       this.setState({
         board: nextBoard,
         gamestate: nextGamestate,
-        phase: 'selecting'
+        phase: 'selecting',
+        whiteDead: nextWhiteDead,
+        blackDead: nextBlackDead
       });
     });
   }
@@ -130,7 +143,7 @@ export default class Game extends React.Component {
   }
 
   decideMove(end) {
-    const { board, gamestate, highlighted, selected, meta } = this.state;
+    const { board, gamestate, highlighted, selected, meta, whiteDead, blackDead } = this.state;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -143,7 +156,16 @@ export default class Game extends React.Component {
     const nextBoard = copy(board);
     const nextGamestate = copy(gamestate);
 
-    this.executeMove(nextBoard, nextGamestate, selected, end);
+    const killed = this.executeMove(nextBoard, nextGamestate, selected, end);
+    const nextWhiteDead = whiteDead;
+    const nextBlackDead = blackDead;
+    if (killed) {
+      if (killed[0] === 'w') {
+        nextWhiteDead.push(killed);
+      } else {
+        nextBlackDead.push(killed);
+      }
+    }
 
     const body = {
       start: selected,
@@ -162,14 +184,19 @@ export default class Game extends React.Component {
       gamestate: nextGamestate,
       phase: 'opponent turn',
       selected: 0,
-      highlighted: []
+      highlighted: [],
+      whiteDead: nextWhiteDead,
+      blackDead: nextBlackDead
     });
   }
 
   executeMove(board, gamestate, start, end) {
+    let killed = null;
+
     // update draw counter
     if (board[end].piece) {
       gamestate.pawnOrKillCounter = 0;
+      killed = board[end].player + board[end].piece;
     } else if (board[start].piece === 'p') {
       gamestate.pawnOrKillCounter = 0;
     } else {
@@ -195,13 +222,17 @@ export default class Game extends React.Component {
 
     // change turn
     changeTurn(gamestate);
+
+    return killed;
   }
 
   render() {
-    const { board, meta, side, selected, highlighted } = this.state;
+    const { board, meta, side, selected, highlighted, whiteDead, blackDead } = this.state;
     const dummy = {
       username: 'Anonymous'
     };
+    const playerDead = side === 'white' ? whiteDead : blackDead;
+    const opponentDead = side === 'white' ? blackDead : whiteDead;
     let player = dummy;
     let opponent = null;
     if (meta) {
@@ -220,7 +251,7 @@ export default class Game extends React.Component {
     return (
       <div className="game page-height mx-auto">
         <div className="w-100 d-block d-md-none p-2">
-          <PlayerPalette player={opponent} cancelAction={this.cancelGame} />
+          <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
         </div>
 
         <div className="w-100 row">
@@ -233,16 +264,16 @@ export default class Game extends React.Component {
 
           <div className="col-auto d-none d-md-block">
             <div className="w-100 p-2">
-              <PlayerPalette player={opponent} cancelAction={this.cancelGame} />
+              <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
             </div>
             <div className="w-100 p-2">
-              <PlayerPalette player={player} />
+              <PlayerPalette player={player} dead={playerDead} />
             </div>
           </div>
         </div>
 
         <div className="w-100 d-block d-md-none p-2">
-          <PlayerPalette player={player} />
+          <PlayerPalette player={player} dead={playerDead} />
         </div>
       </div>
     );
