@@ -278,7 +278,12 @@ a:hover {
 
 .palette-pending {
   margin: 0.25rem;
-  font-weight: 350;
+  font-weight: 300;
+}
+
+.palette-promotion {
+  font-weight: 300;
+  margin-bottom: 0.25rem;
 }
 
 .board-container {
@@ -355,6 +360,17 @@ a:hover {
 .dead.chess-piece {
   height: 28px;
   width: 28px;
+}
+
+.promotion.chess-piece {
+  height: 32px;
+  width: 32px;
+  border-radius: 5px;
+  border: 3px solid #647ca1;
+}
+
+.promotion.chess-piece:hover {
+  border: 3px solid #eaecee;
 }
 
 .tile.selected {

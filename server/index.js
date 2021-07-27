@@ -134,7 +134,7 @@ app.post('/api/games/:gameId', (req, res, next) => {
 });
 
 app.post('/api/moves/:gameId', (req, res, next) => {
-  const { start, end } = req.body;
+  const { start, end, promotion } = req.body;
   if (!start || !end) {
     throw new ClientError(400, 'missing required field');
   }
@@ -150,11 +150,11 @@ app.post('/api/moves/:gameId', (req, res, next) => {
   }
 
   const sql = `
-  insert into "moves" ("gameId", "start", "end")
-  values ($1, $2, $3)
+  insert into "moves" ("gameId", "start", "end", "promotion")
+  values ($1, $2, $3, $4)
   returning *
   `;
-  const params = [gameId, start, end];
+  const params = [gameId, start, end, promotion];
   db.query(sql, params)
     .then(result => {
       if (result.rows.length === 0) {

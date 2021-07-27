@@ -42,6 +42,8 @@ export default class Game extends React.Component {
     this.showOptions = this.showOptions.bind(this);
     this.decideMove = this.decideMove.bind(this);
     this.executeMove = this.executeMove.bind(this);
+    this.resolveTurn = this.resolveTurn.bind(this);
+    this.promotePawn = this.promotePawn.bind(this);
     this.removeBanner = this.removeBanner.bind(this);
   }
 
@@ -63,7 +65,7 @@ export default class Game extends React.Component {
 
     this.socket.on('move made', move => {
       const { board, gamestate, whiteDead, blackDead } = this.state;
-      const { start, end } = move;
+      const { start, end, promotion } = move;
       if (!board[start].piece) {
         return;
       }
@@ -96,6 +98,11 @@ export default class Game extends React.Component {
       if (nextGamestate.draw) {
         showDraw = setTimeout(this.removeBanner, 2000);
         phase = 'done';
+      }
+      // promote any pawns
+      if (promotion) {
+        nextBoard[end].piece = promotion;
+        nextGamestate.promoting = null;
       }
       this.setState({
         board: nextBoard,
@@ -130,7 +137,7 @@ export default class Game extends React.Component {
     if (Number.isNaN(coord)) {
       return;
     }
-    if (phase === 'opponent turn' || phase === 'done') {
+    if (phase === 'opponent turn' || phase === 'promoting' || phase === 'done') {
       return;
     }
 
@@ -168,7 +175,7 @@ export default class Game extends React.Component {
   }
 
   decideMove(end) {
-    const { board, gamestate, highlighted, selected, meta, whiteDead, blackDead } = this.state;
+    const { board, gamestate, highlighted, selected, whiteDead, blackDead } = this.state;
     if (!highlighted.includes(end)) {
       this.setState({
         phase: 'selecting',
@@ -180,6 +187,7 @@ export default class Game extends React.Component {
 
     const nextBoard = copy(board);
     const nextGamestate = copy(gamestate);
+    let phase = 'opponent turn';
 
     const killed = this.executeMove(nextBoard, nextGamestate, selected, end);
     const nextWhiteDead = whiteDead;
@@ -194,22 +202,9 @@ export default class Game extends React.Component {
       }
     }
 
-    let phase = 'opponent turn';
-
-    // display banners when applicable
-    let showCheck = 0;
-    let showCheckmate = 0;
-    let showDraw = 0;
-    if (nextGamestate.check.wb || nextGamestate.check.bw) {
-      showCheck = setTimeout(this.removeBanner, 2000);
-    }
-    if (nextGamestate.checkmate) {
-      showCheckmate = setTimeout(this.removeBanner, 2000);
-      phase = 'done';
-    }
-    if (nextGamestate.draw) {
-      showDraw = setTimeout(this.removeBanner, 2000);
-      phase = 'done';
+    if (nextGamestate.promoting) {
+      phase = 'promoting';
+      window.localStorage.setItem('start', selected.toString());
     }
 
     this.setState({
@@ -219,22 +214,12 @@ export default class Game extends React.Component {
       selected: 0,
       highlighted: [],
       whiteDead: nextWhiteDead,
-      blackDead: nextBlackDead,
-      showCheck,
-      showCheckmate,
-      showDraw
+      blackDead: nextBlackDead
     });
 
-    // update other player
-    const body = { start: selected, end };
-    const res = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    };
-    fetch(`/api/moves/${meta.gameId}`, res);
+    if (!nextGamestate.promoting) {
+      this.resolveTurn(nextGamestate, selected, end);
+    }
   }
 
   executeMove(board, gamestate, start, end) {
@@ -273,6 +258,63 @@ export default class Game extends React.Component {
     return killed;
   }
 
+  resolveTurn(nextGamestate, start, end, promotion = null) {
+    const { meta } = this.state;
+    let phase = 'opponent move';
+
+    // display banners when applicable
+    let showCheck = 0;
+    let showCheckmate = 0;
+    let showDraw = 0;
+    if (nextGamestate.check.wb || nextGamestate.check.bw) {
+      showCheck = setTimeout(this.removeBanner, 2000);
+    }
+    if (nextGamestate.checkmate) {
+      showCheckmate = setTimeout(this.removeBanner, 2000);
+      phase = 'done';
+    }
+    if (nextGamestate.draw) {
+      showDraw = setTimeout(this.removeBanner, 2000);
+      phase = 'done';
+    }
+
+    this.setState({
+      phase,
+      showCheck,
+      showCheckmate,
+      showDraw
+    });
+
+    // update other player
+    const body = { start, end, promotion };
+    const res = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch(`/api/moves/${meta.gameId}`, res);
+  }
+
+  promotePawn(event) {
+    const { board, gamestate } = this.state;
+    const nextBoard = copy(board);
+    const nextGamestate = copy(gamestate);
+    const end = gamestate.promoting;
+    const start = window.localStorage.getItem('start');
+    window.localStorage.removeItem('start');
+    nextBoard[end].piece = event.target.id;
+    nextGamestate.promoting = 0;
+    this.setState({
+      board: nextBoard,
+      gamestate: nextGamestate,
+      phase: 'opponent move'
+    });
+
+    this.resolveTurn(nextGamestate, start, end, event.target.id);
+  }
+
   removeBanner() {
     this.setState({
       showCheck: 0,
@@ -282,24 +324,25 @@ export default class Game extends React.Component {
   }
 
   render() {
-    const { board, meta, side, selected, highlighted } = this.state;
+    const { board, meta, side, selected, highlighted, phase } = this.state;
     const { whiteDead, blackDead, showCheck, showCheckmate, showDraw } = this.state;
     const dummy = {
       username: 'Anonymous'
     };
     const playerDead = side === 'white' ? whiteDead : blackDead;
     const opponentDead = side === 'white' ? blackDead : whiteDead;
+    const promoteFunc = phase === 'promoting' ? this.promotePawn : null;
     let player = dummy;
     let opponent = null;
     if (meta) {
       player = { username: meta.playerName };
       if (meta.opponentName) {
         if (side === meta.playerSide) {
-          player = { username: meta.playerName };
-          opponent = { username: meta.opponentName };
+          player = { username: meta.playerName, side };
+          opponent = { username: meta.opponentName, side: meta.opponentSide };
         } else {
-          player = { username: meta.opponentName };
-          opponent = { username: meta.playerName };
+          player = { username: meta.opponentName, side: meta.opponentSide };
+          opponent = { username: meta.playerName, side };
         }
       }
     }
@@ -326,13 +369,13 @@ export default class Game extends React.Component {
               <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
             </div>
             <div className="w-100 p-2">
-              <PlayerPalette player={player} dead={playerDead} />
+              <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} />
             </div>
           </div>
         </div>
 
         <div className="w-100 d-block d-md-none p-2">
-          <PlayerPalette player={player} dead={playerDead} />
+          <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} />
         </div>
       </div>
     );
