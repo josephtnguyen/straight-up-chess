@@ -18,6 +18,7 @@ import checkScan from '../lib/check-scan';
 import drawScan from '../lib/draw-scan';
 import castleScan from '../lib/castle-scan';
 import pawnScan from '../lib/pawn-scan';
+import Banner from '../components/banner';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -31,13 +32,15 @@ export default class Game extends React.Component {
       selected: 0,
       highlighted: [],
       whiteDead: [],
-      blackDead: []
+      blackDead: [],
+      showCheck: 0
     };
     this.cancelGame = this.cancelGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.showOptions = this.showOptions.bind(this);
     this.decideMove = this.decideMove.bind(this);
     this.executeMove = this.executeMove.bind(this);
+    this.removeBanner = this.removeBanner.bind(this);
   }
 
   componentDidMount() {
@@ -68,6 +71,7 @@ export default class Game extends React.Component {
       const killed = this.executeMove(nextBoard, nextGamestate, start, end);
       const nextWhiteDead = whiteDead;
       const nextBlackDead = blackDead;
+      // add dead pieces to player palette
       if (killed) {
         if (killed[0] === 'w') {
           nextWhiteDead.push(killed);
@@ -75,12 +79,18 @@ export default class Game extends React.Component {
           nextBlackDead.push(killed);
         }
       }
+      // display check if necessary
+      let showCheck = 0;
+      if (nextGamestate.check.wb || nextGamestate.check.bw) {
+        showCheck = setTimeout(this.removeBanner, 2000);
+      }
       this.setState({
         board: nextBoard,
         gamestate: nextGamestate,
         phase: 'selecting',
         whiteDead: nextWhiteDead,
-        blackDead: nextBlackDead
+        blackDead: nextBlackDead,
+        showCheck
       });
     });
   }
@@ -159,12 +169,20 @@ export default class Game extends React.Component {
     const killed = this.executeMove(nextBoard, nextGamestate, selected, end);
     const nextWhiteDead = whiteDead;
     const nextBlackDead = blackDead;
+
+    // add dead pieces to player palette
     if (killed) {
       if (killed[0] === 'w') {
         nextWhiteDead.push(killed);
       } else {
         nextBlackDead.push(killed);
       }
+    }
+
+    // display check if necessary
+    let showCheck = 0;
+    if (nextGamestate.check.wb || nextGamestate.check.bw) {
+      showCheck = setTimeout(this.removeBanner, 2000);
     }
 
     const body = {
@@ -186,7 +204,8 @@ export default class Game extends React.Component {
       selected: 0,
       highlighted: [],
       whiteDead: nextWhiteDead,
-      blackDead: nextBlackDead
+      blackDead: nextBlackDead,
+      showCheck
     });
   }
 
@@ -226,8 +245,14 @@ export default class Game extends React.Component {
     return killed;
   }
 
+  removeBanner() {
+    this.setState({
+      showCheck: 0
+    });
+  }
+
   render() {
-    const { board, meta, side, selected, highlighted, whiteDead, blackDead } = this.state;
+    const { board, meta, side, selected, highlighted, whiteDead, blackDead, showCheck } = this.state;
     const dummy = {
       username: 'Anonymous'
     };
@@ -257,7 +282,8 @@ export default class Game extends React.Component {
         <div className="w-100 row">
           <div className="col">
 
-            <div className="board-container my-2" onClick={this.handleClick}>
+            <div className="board-container my-1" onClick={this.handleClick}>
+              <Banner message={'Check'} show={showCheck} />
               <ReactBoard board={board} highlighted={highlighted} selected={selected} side={side} />
             </div>
           </div>

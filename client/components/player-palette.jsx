@@ -9,8 +9,8 @@ export default function PlayerPalette(props) {
       </div>
     );
   }
+
   const { player, dead } = props;
-  // const deadDummy = ['bp', 'wk', 'wr', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk', 'wk'];
   const deadPieces = dead.map((piece, index) => {
     const src = `/images/${piece}.svg`;
     return <img key={index} src={src} className="dead chess-piece m-1" />;

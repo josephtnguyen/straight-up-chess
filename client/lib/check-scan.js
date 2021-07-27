@@ -23,6 +23,5 @@ export default function checkScan(board, gamestate) {
   gamestate.check[gamestate.turn] = false;
   if (allyMoveSpace.includes(kingCoord)) {
     gamestate.check[gamestate.nextTurn] = true;
-    console.log('Check!'); // eslint-disable-line
   }
 }
