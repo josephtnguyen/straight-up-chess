@@ -6,7 +6,7 @@ drop schema "public" cascade;
 
 create schema "public";
 
-CREATE TABLE "moves" (
+CREATE TABLE "public"."moves" (
 	"gameId" integer NOT NULL,
 	"moveId" serial NOT NULL,
 	"start" integer NOT NULL,
@@ -20,14 +20,14 @@ CREATE TABLE "moves" (
 
 
 
-CREATE TABLE "games" (
+CREATE TABLE "public"."games" (
 	"gameId" serial NOT NULL,
 	"playerName" TEXT NOT NULL,
 	"playerSide" TEXT NOT NULL,
 	"message" TEXT NOT NULL,
 	"opponentName" TEXT,
 	"opponentSide" TEXT NOT NULL,
-	"resolved" BOOLEAN NOT NULL,
+	"winner" TEXT,
 	"createdAt" timestamp with time zone NOT NULL default now(),
 	CONSTRAINT "games_pk" PRIMARY KEY ("gameId")
 ) WITH (
