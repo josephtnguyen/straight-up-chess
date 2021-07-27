@@ -54,10 +54,7 @@ export default class Game extends React.Component {
 
   cancelGame() {
     const { gameId } = this.state.meta;
-    const req = {
-      method: 'DELETE'
-    };
-    fetch(`/api/games/${gameId}`, req)
+    fetch(`/api/games/${gameId}`, { method: 'DELETE' })
       .then(res => res.json())
       .then(result => {
         window.location.hash = '#join';
@@ -105,7 +102,7 @@ export default class Game extends React.Component {
   }
 
   decideMove(end) {
-    const { board, gamestate, highlighted, selected } = this.state;
+    const { board, gamestate, highlighted, selected, meta } = this.state;
     const { checkmateScan, checkScan, drawScan, castleScan, pawnScan } = this;
     if (!highlighted.includes(end)) {
       this.setState({
@@ -147,6 +144,18 @@ export default class Game extends React.Component {
 
     // change turn
     changeTurn(nextGamestate);
+    const body = {
+      start: selected,
+      end: end
+    };
+    const res = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch(`/api/moves/${meta.gameId}`, res);
     this.setState({
       board: nextBoard,
       gamestate: nextGamestate,
@@ -761,7 +770,6 @@ function isViableMove(board, gamestate, turn, start, end) {
 function changeTurn(gamestate) {
   if (gamestate.turn === 'bw') {
     gamestate.turnNum++;
-    console.log('turnNum:', gamestate.turnNum); // eslint-disable-line
     gamestate.enPassantWhite = 0;
   } else {
     gamestate.enPassantBlack = 0;

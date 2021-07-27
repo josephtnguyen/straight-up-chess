@@ -161,7 +161,7 @@ app.post('/api/moves/:gameId', (req, res, next) => {
         throw new ClientError(500, 'an unexpected error occurred');
       }
       const move = result.rows[0];
-      io.to(gameId).emit(move);
+      io.to(gameId).emit('move made', move);
       res.json(move);
     })
     .catch(err => next(err));
