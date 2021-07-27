@@ -46,7 +46,8 @@ export default class Game extends React.Component {
           return;
         }
       }
-      this.setState({ meta, side });
+      const phase = side === 'white' ? 'selecting' : 'opponent turn';
+      this.setState({ meta, side, phase });
     });
 
     this.socket.on('move made', move => {
@@ -61,7 +62,8 @@ export default class Game extends React.Component {
       this.executeMove(nextBoard, nextGamestate, start, end);
       this.setState({
         board: nextBoard,
-        gamestate: nextGamestate
+        gamestate: nextGamestate,
+        phase: 'selecting'
       });
     });
   }
@@ -86,6 +88,10 @@ export default class Game extends React.Component {
     if (Number.isNaN(coord)) {
       return;
     }
+    if (phase === 'opponent turn') {
+      return;
+    }
+
     if (phase === 'selecting') {
       showOptions(coord);
     } else if (phase === 'showing options') {
@@ -107,7 +113,7 @@ export default class Game extends React.Component {
     const highlighted = [];
     const moveSpace = findMoveSpace(board, gamestate.turn, start, false, gamestate);
     for (let i = 0; i < moveSpace.length; i++) {
-      if (isViableMove(board, gamestate.turn, start, moveSpace[i])) {
+      if (isViableMove(board, gamestate, gamestate.turn, start, moveSpace[i])) {
         highlighted.push(moveSpace[i]);
       }
     }
@@ -150,7 +156,7 @@ export default class Game extends React.Component {
     this.setState({
       board: nextBoard,
       gamestate: nextGamestate,
-      phase: 'selecting',
+      phase: 'opponent turn',
       selected: 0,
       highlighted: []
     });
