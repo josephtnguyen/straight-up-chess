@@ -349,7 +349,7 @@ export default class Game extends React.Component {
 
     return (
       <div className="game page-height mx-auto">
-        <div className="w-100 d-block d-md-none p-2">
+        <div className="w-100 d-block d-sm-none p-2">
           <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
         </div>
 
@@ -364,7 +364,7 @@ export default class Game extends React.Component {
             </div>
           </div>
 
-          <div className="col-auto d-none d-md-block">
+          <div className="col-auto d-none d-sm-block">
             <div className="w-100 p-2">
               <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
             </div>
@@ -374,7 +374,7 @@ export default class Game extends React.Component {
           </div>
         </div>
 
-        <div className="w-100 d-block d-md-none p-2">
+        <div className="w-100 d-block d-sm-none p-2">
           <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} />
         </div>
       </div>

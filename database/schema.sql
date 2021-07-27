@@ -11,6 +11,7 @@ CREATE TABLE "moves" (
 	"moveId" serial NOT NULL,
 	"start" integer NOT NULL,
 	"end" integer NOT NULL,
+	"promotion" TEXT,
 	"createdAt" timestamp with time zone NOT NULL default now(),
 	CONSTRAINT "moves_pk" PRIMARY KEY ("moveId")
 ) WITH (
