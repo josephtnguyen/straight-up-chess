@@ -263,7 +263,7 @@ a:hover {
   color: #eaecee;
   border-radius: 5px;
   width: 100%;
-  height: 120px;
+  height: 132px;
 }
 
 .palette-avatar {
@@ -278,7 +278,12 @@ a:hover {
 
 .palette-pending {
   margin: 0.25rem;
-  font-weight: 350;
+  font-weight: 300;
+}
+
+.palette-promotion {
+  font-weight: 300;
+  margin-bottom: 0.25rem;
 }
 
 .board-container {
@@ -288,12 +293,36 @@ a:hover {
   padding-top: 100%;
 }
 
+.banner {
+  background-color: #4e545e;
+  color: #eaecee;
+  width: calc(100% - 4px);
+  height: 10%;
+  position: absolute;
+  z-index: 3;
+  top: 45%;
+  left: 2px;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0%;
+  pointer-events: none;
+}
+
+.banner.show {
+  opacity: 100%;
+}
+
 .board {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
   border: 2px solid black;
+  display: flex;
 }
 
 .board-row {
@@ -326,4 +355,28 @@ a:hover {
 .chess-piece {
   height: 60%;
   width: 60%;
+}
+
+.dead.chess-piece {
+  height: 28px;
+  width: 28px;
+}
+
+.promotion.chess-piece {
+  height: 32px;
+  width: 32px;
+  border-radius: 5px;
+  border: 3px solid #647ca1;
+}
+
+.promotion.chess-piece:hover {
+  border: 3px solid #eaecee;
+}
+
+.tile.selected {
+  box-shadow: inset 0 0 0.5rem 0.5rem skyblue;
+}
+
+.highlighted {
+  box-shadow: inset 0 0 0.5rem 0.5rem rgb(165, 217, 238);
 }
