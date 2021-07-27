@@ -28,6 +28,7 @@ export default class GameState {
     this.enPassantBlack = 0;
 
     this.draw = false;
+    this.pawnOrKillCounter = 0;
     this.drawCase = null;
     this.pastBoards = [];
     this.pawnKingMoveCounter = 0;

@@ -15,6 +15,11 @@ export default function checkmateScan(board, gamestate) {
     }
   }
 
+  // return if king is not in check
+  if (!gamestate.check[gamestate.nextTurn]) {
+    return;
+  }
+
   // return if there is no checkmate
   for (const enemyCoord of enemyCoords) {
     if (isViableStart(board, gamestate, enemyCoord, gamestate.nextTurn)) {

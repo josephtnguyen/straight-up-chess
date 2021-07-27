@@ -4,10 +4,6 @@ import findEnemyMoveSpace from './find-enemy-move-space';
 const coords = new Coords();
 
 export default function checkScan(board, gamestate) {
-  if (gamestate.checkmate) {
-    return;
-  }
-
   const allyMoveSpace = findEnemyMoveSpace(board, gamestate.nextTurn, gamestate);
 
   // find enemy king coord after move

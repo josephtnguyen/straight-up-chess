@@ -1,11 +1,14 @@
 import Coords from './coords';
 import pseudoCopy from './pseudo-copy';
 import isEmptyAt from './is-empty-at';
-import findMoveSpace from './find-move-space';
+import isViableStart from './is-viable-start';
 
 const coords = new Coords();
 
 export default function drawScan(board, gamestate) {
+  if (gamestate.checkmate) {
+    return;
+  }
   gamestate.pastBoards.push(pseudoCopy(board));
 
   const { turn } = gamestate;
@@ -15,7 +18,7 @@ export default function drawScan(board, gamestate) {
     gamestate.draw = true;
   }
 
-  // statemate draw
+  // stalemate draw
   const enemyCoords = [];
 
   for (const coord of coords) {
@@ -28,8 +31,7 @@ export default function drawScan(board, gamestate) {
 
   let enemyCanMove = false;
   for (const enemyCoord of enemyCoords) {
-    const eachMoveSpace = findMoveSpace(board, turn[1] + turn[0], enemyCoord, false, gamestate);
-    if (eachMoveSpace.length !== 0) {
+    if (isViableStart(board, gamestate, enemyCoord, gamestate.nextTurn)) {
       enemyCanMove = true;
       break;
     }
@@ -128,8 +130,5 @@ export default function drawScan(board, gamestate) {
         gamestate.draw = true;
       }
     }
-  }
-  if (gamestate.draw) {
-    console.log(`Draw by ${gamestate.drawCase}`); // eslint-disable-line
   }
 }

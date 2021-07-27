@@ -34,7 +34,8 @@ export default class Game extends React.Component {
       whiteDead: [],
       blackDead: [],
       showCheck: 0,
-      showCheckmate: 0
+      showCheckmate: 0,
+      showDraw: 0
     };
     this.cancelGame = this.cancelGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -80,23 +81,31 @@ export default class Game extends React.Component {
           nextBlackDead.push(killed);
         }
       }
+      let phase = 'selecting';
       // display banners when applicable
       let showCheck = 0;
       let showCheckmate = 0;
+      let showDraw = 0;
       if (nextGamestate.check.wb || nextGamestate.check.bw) {
         showCheck = setTimeout(this.removeBanner, 2000);
       }
       if (nextGamestate.checkmate) {
         showCheckmate = setTimeout(this.removeBanner, 2000);
+        phase = 'done';
+      }
+      if (nextGamestate.draw) {
+        showDraw = setTimeout(this.removeBanner, 2000);
+        phase = 'done';
       }
       this.setState({
         board: nextBoard,
         gamestate: nextGamestate,
-        phase: 'selecting',
+        phase,
         whiteDead: nextWhiteDead,
         blackDead: nextBlackDead,
         showCheck,
-        showCheckmate
+        showCheckmate,
+        showDraw
       });
     });
   }
@@ -121,7 +130,7 @@ export default class Game extends React.Component {
     if (Number.isNaN(coord)) {
       return;
     }
-    if (phase === 'opponent turn') {
+    if (phase === 'opponent turn' || phase === 'done') {
       return;
     }
 
@@ -185,20 +194,39 @@ export default class Game extends React.Component {
       }
     }
 
+    let phase = 'opponent turn';
+
     // display banners when applicable
     let showCheck = 0;
     let showCheckmate = 0;
+    let showDraw = 0;
     if (nextGamestate.check.wb || nextGamestate.check.bw) {
       showCheck = setTimeout(this.removeBanner, 2000);
     }
     if (nextGamestate.checkmate) {
       showCheckmate = setTimeout(this.removeBanner, 2000);
+      phase = 'done';
+    }
+    if (nextGamestate.draw) {
+      showDraw = setTimeout(this.removeBanner, 2000);
+      phase = 'done';
     }
 
-    const body = {
-      start: selected,
-      end: end
-    };
+    this.setState({
+      board: nextBoard,
+      gamestate: nextGamestate,
+      phase,
+      selected: 0,
+      highlighted: [],
+      whiteDead: nextWhiteDead,
+      blackDead: nextBlackDead,
+      showCheck,
+      showCheckmate,
+      showDraw
+    });
+
+    // update other player
+    const body = { start: selected, end };
     const res = {
       method: 'POST',
       headers: {
@@ -207,17 +235,6 @@ export default class Game extends React.Component {
       body: JSON.stringify(body)
     };
     fetch(`/api/moves/${meta.gameId}`, res);
-    this.setState({
-      board: nextBoard,
-      gamestate: nextGamestate,
-      phase: 'opponent turn',
-      selected: 0,
-      highlighted: [],
-      whiteDead: nextWhiteDead,
-      blackDead: nextBlackDead,
-      showCheck,
-      showCheckmate
-    });
   }
 
   executeMove(board, gamestate, start, end) {
@@ -245,9 +262,9 @@ export default class Game extends React.Component {
 
     // apply scans
     pawnScan(board, gamestate);
+    checkScan(board, gamestate);
     checkmateScan(board, gamestate);
     drawScan(board, gamestate);
-    checkScan(board, gamestate);
     castleScan(board, gamestate);
 
     // change turn
@@ -259,12 +276,14 @@ export default class Game extends React.Component {
   removeBanner() {
     this.setState({
       showCheck: 0,
-      showCheckmate: 0
+      showCheckmate: 0,
+      showDraw: 0
     });
   }
 
   render() {
-    const { board, meta, side, selected, highlighted, whiteDead, blackDead, showCheck, showCheckmate } = this.state;
+    const { board, meta, side, selected, highlighted } = this.state;
+    const { whiteDead, blackDead, showCheck, showCheckmate, showDraw } = this.state;
     const dummy = {
       username: 'Anonymous'
     };
@@ -297,6 +316,7 @@ export default class Game extends React.Component {
             <div className="board-container my-1" onClick={this.handleClick}>
               <Banner message={'Check'} show={showCheck} />
               <Banner message={'Checkmate'} show={showCheckmate} />
+              <Banner message={'Draw'} show={showDraw} />
               <ReactBoard board={board} highlighted={highlighted} selected={selected} side={side} />
             </div>
           </div>
