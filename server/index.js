@@ -93,8 +93,8 @@ app.post('/api/games', (req, res, next) => {
   }
   const opponentSide = playerSide === 'white' ? 'black' : 'white';
   const sql = `
-  insert into "games" ("message", "playerName", "playerSide", "opponentSide", "resolved")
-  values ($1, $2, $3, $4, FALSE)
+  insert into "games" ("message", "playerName", "playerSide", "opponentSide")
+  values ($1, $2, $3, $4)
   returning *
   `;
   const params = [message, playerName, playerSide, opponentSide];
@@ -163,6 +163,38 @@ app.post('/api/moves/:gameId', (req, res, next) => {
       const move = result.rows[0];
       io.to(gameId).emit('move made', move);
       res.json(move);
+    })
+    .catch(err => next(err));
+});
+
+app.put('/api/games/:gameId', (req, res, next) => {
+  const { winner } = req.body;
+  const resolutions = ['white', 'black', 'draw'];
+  if (!winner) {
+    throw new ClientError(400, 'missing required field');
+  }
+  if (!resolutions.includes(winner)) {
+    throw new ClientError(400, `${winner} is not a valid resolution`);
+  }
+  const gameId = req.params.gameId;
+  const gameIdInt = parseInt(gameId);
+  if (!Number.isInteger(gameIdInt)) {
+    throw new ClientError(400, `${gameId} is not a valid gameId`);
+  }
+
+  const sql = `
+  update "games"
+     set "winner" = $2
+   where "gameId" = $1
+  returning *
+  `;
+  const params = [gameId, winner];
+  db.query(sql, params)
+    .then(result => {
+      if (result.rows.length === 0) {
+        throw new ClientError(404, 'no such gameId exists');
+      }
+      res.json(result.rows[0]);
     })
     .catch(err => next(err));
 });
