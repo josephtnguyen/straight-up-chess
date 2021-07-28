@@ -19,6 +19,7 @@ import drawScan from '../lib/draw-scan';
 import castleScan from '../lib/castle-scan';
 import pawnScan from '../lib/pawn-scan';
 import Banner from '../components/banner';
+import PostGame from '../components/post-game';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -349,6 +350,8 @@ export default class Game extends React.Component {
 
     return (
       <div className="game page-height mx-auto">
+        <PostGame player={player} opponent={opponent} />
+
         <div className="w-100 d-block d-sm-none p-2">
           <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
         </div>
