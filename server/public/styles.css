@@ -411,7 +411,20 @@ a:hover {
   font-size: 36px;
   border-radius: 5px;
   height: 156px;
+  width: calc(100% - 2rem);
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.return-to-game-btn {
+  background-color: #4e545e;
+  color: #eaecee;
+  width: calc(100% - 2rem);
+  height: 48px;
+  transition: background-color 0.25s ease;
+}
+
+.return-to-game-btn:hover {
+  background-color: #1a1c20;
 }

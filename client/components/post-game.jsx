@@ -4,14 +4,22 @@ export default function PostGame(props) {
   const { player, opponent } = props;
   return (
     <div className="post-game w-100 position-fixed page-height">
-      <div className="d-flex align-items-center my-2">
-        <Player player={player} win={true} />
-      </div>
-      <div className="d-flex align-items-center my-2">
-        <Player player={opponent} />
+      <div className="row">
+        <div className="d-flex align-items-center my-2">
+          <Player player={player} win={true} />
+        </div>
+        <div className="d-flex align-items-center my-2">
+          <Player player={opponent} />
+        </div>
       </div>
 
-      <Resolution resolution="win" />
+      <div className="row justify-content-center">
+        <Resolution resolution="win" />
+      </div>
+
+      <div className="row justify-content-center my-3">
+        <a className="return-to-game-btn" href="">Return to Game</a>
+      </div>
     </div>
   );
 }
