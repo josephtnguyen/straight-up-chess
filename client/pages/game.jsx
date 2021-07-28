@@ -47,6 +47,7 @@ export default class Game extends React.Component {
     this.executeMove = this.executeMove.bind(this);
     this.resolveTurn = this.resolveTurn.bind(this);
     this.promotePawn = this.promotePawn.bind(this);
+    this.concludeGame = this.concludeGame.bind(this);
     this.removeBanner = this.removeBanner.bind(this);
     this.openPostGame = this.openPostGame.bind(this);
     this.closePostGame = this.closePostGame.bind(this);
@@ -89,7 +90,6 @@ export default class Game extends React.Component {
         }
       }
       let phase = 'selecting';
-      let postGameOpen = false;
       // display banners when applicable
       let showCheck = 0;
       let showCheckmate = 0;
@@ -100,12 +100,10 @@ export default class Game extends React.Component {
       if (nextGamestate.checkmate) {
         showCheckmate = setTimeout(this.removeBanner, 2000);
         phase = 'done';
-        postGameOpen = true;
       }
       if (nextGamestate.draw) {
         showDraw = setTimeout(this.removeBanner, 2000);
         phase = 'done';
-        postGameOpen = true;
       }
       // promote any pawns
       if (promotion) {
@@ -116,13 +114,14 @@ export default class Game extends React.Component {
         board: nextBoard,
         gamestate: nextGamestate,
         phase,
-        postGameOpen,
         whiteDead: nextWhiteDead,
         blackDead: nextBlackDead,
         showCheck,
         showCheckmate,
         showDraw
       });
+
+      setTimeout(this.concludeGame, 1000);
     });
   }
 
@@ -270,7 +269,6 @@ export default class Game extends React.Component {
   resolveTurn(nextGamestate, start, end, promotion = null) {
     const { meta } = this.state;
     let phase = 'opponent move';
-    let postGameOpen = false;
 
     // display banners when applicable
     let showCheck = 0;
@@ -282,17 +280,14 @@ export default class Game extends React.Component {
     if (nextGamestate.checkmate) {
       showCheckmate = setTimeout(this.removeBanner, 2000);
       phase = 'done';
-      postGameOpen = true;
     }
     if (nextGamestate.draw) {
       showDraw = setTimeout(this.removeBanner, 2000);
       phase = 'done';
-      postGameOpen = true;
     }
 
     this.setState({
       phase,
-      postGameOpen,
       showCheck,
       showCheckmate,
       showDraw
@@ -333,6 +328,7 @@ export default class Game extends React.Component {
             .then(res => res.json())
             .then(result => {
               this.setState({ meta: result });
+              setTimeout(this.openPostGame, 2000);
             });
         }
       });
@@ -356,6 +352,18 @@ export default class Game extends React.Component {
     this.resolveTurn(nextGamestate, start, end, event.target.id);
   }
 
+  concludeGame() {
+    const { phase, meta } = this.state;
+    if (phase === 'done') {
+      fetch(`/api/games/${meta.gameId}`)
+        .then(res => res.json())
+        .then(result => {
+          this.setState({ meta: result });
+          setTimeout(this.openPostGame, 2000);
+        });
+    }
+  }
+
   removeBanner() {
     this.setState({
       showCheck: 0,
@@ -364,41 +372,51 @@ export default class Game extends React.Component {
     });
   }
 
-  openPostGame(event) {
+  openPostGame() {
     this.setState({ postGameOpen: true });
   }
 
-  closePostGame(event) {
+  closePostGame() {
     this.setState({ postGameOpen: false });
   }
 
   render() {
+    if (!this.state.meta) {
+      return null;
+    }
     const { board, meta, side, postGameOpen, selected, highlighted, phase } = this.state;
     const { whiteDead, blackDead, showCheck, showCheckmate, showDraw } = this.state;
     const playerDead = side === 'white' ? whiteDead : blackDead;
     const opponentDead = side === 'white' ? blackDead : whiteDead;
     const promoteFunc = phase === 'promoting' ? this.promotePawn : null;
-    const dummy = {
-      username: 'Anonymous'
-    };
-    let player = dummy;
+
+    let player = { username: meta.playerName };
     let opponent = null;
-    if (meta) {
-      player = { username: meta.playerName };
-      if (meta.opponentName) {
-        if (side === meta.playerSide) {
-          player = { username: meta.playerName, side };
-          opponent = { username: meta.opponentName, side: meta.opponentSide };
-        } else {
-          player = { username: meta.opponentName, side: meta.opponentSide };
-          opponent = { username: meta.playerName, side };
-        }
+    let resolution = null;
+    if (meta.opponentName) {
+      if (side === meta.playerSide) {
+        player = { username: meta.playerName, side };
+        opponent = { username: meta.opponentName, side: meta.opponentSide };
+      } else {
+        player = { username: meta.opponentName, side: meta.opponentSide };
+        opponent = { username: meta.playerName, side: meta.playerSide };
       }
     }
+    if (meta.winner) {
+      if (meta.winner === 'draw') {
+        resolution = 'draw';
+      } else if (player.side === meta.winner) {
+        resolution = 'win';
+      } else if (opponent.side === meta.winner) {
+        resolution = 'lose';
+      }
+    }
+
     const postGameContext = {
       player,
       opponent,
-      open: postGameOpen
+      open: postGameOpen,
+      resolution
     };
 
     return (

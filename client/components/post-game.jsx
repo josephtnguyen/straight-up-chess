@@ -4,24 +4,25 @@ import PostGameContext from '../lib/post-game-context';
 export default class PostGame extends React.Component {
   render() {
     const { closePostGame } = this.props;
-    const { player, opponent, open } = this.context;
+    const { player, opponent, open, resolution } = this.context;
     if (!open) {
       return null;
     }
+
     return (
       <div className="post-game w-100 position-fixed page-height">
         <div className="row">
           <div className="d-flex align-items-center my-2">
-            <Player player={player} win={true} />
+            <Player player={player} win={resolution === 'win'} />
           </div>
           <div className="d-flex align-items-center my-2">
-            <Player player={opponent} />
+            <Player player={opponent} win={resolution === 'lose'} />
           </div>
         </div>
 
         <div className="row">
           <div className="col">
-            <Resolution resolution="win" />
+            <Resolution resolution={resolution} />
           </div>
         </div>
 
