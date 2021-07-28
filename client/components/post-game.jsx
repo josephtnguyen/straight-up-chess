@@ -27,7 +27,7 @@ export default function PostGame(props) {
 
       <div className="row my-3">
         <div className="col justify-content-center">
-          <a className="exit-btn" href="">Exit</a>
+          <a className="exit-btn" href="#join">Exit</a>
         </div>
       </div>
     </div>
