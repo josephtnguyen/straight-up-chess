@@ -52,8 +52,28 @@ io.on('connection', socket => {
     db.query(sql, params)
       .then(result => {
         const meta = result.rows[0];
-        io.to(gameId).emit('room joined', meta);
         io.to('lobby').emit('game joined', meta);
+
+        const payload = {};
+        payload.meta = meta;
+        if (!meta.opponentName) {
+          io.to(gameId).emit('room joined', payload);
+        } else {
+          const sql = `
+          select *
+            from "moves"
+          where "gameId" = $1
+          order by "moveId"
+          `;
+          const params = [gameId];
+          db.query(sql, params)
+            .then(res => res.json())
+            .then(result => {
+              payload.moves = result;
+              io.to(gameId).emit('room joined', payload);
+            })
+            .catch(err => console.error(err));
+        }
       })
       .catch(err => {
         console.error(err);
