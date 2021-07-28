@@ -2,9 +2,12 @@ import React from 'react';
 import { io } from 'socket.io-client';
 import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
+import Banner from '../components/banner';
+import PostGame from '../components/post-game';
 import Board from '../lib/board';
 import GameState from '../lib/gamestate';
 import RouteContext from '../lib/route-context';
+import PostGameContext from '../lib/post-game-context';
 
 import copy from '../lib/copy';
 import isEmptyAt from '../lib/is-empty-at';
@@ -18,8 +21,6 @@ import checkScan from '../lib/check-scan';
 import drawScan from '../lib/draw-scan';
 import castleScan from '../lib/castle-scan';
 import pawnScan from '../lib/pawn-scan';
-import Banner from '../components/banner';
-import PostGame from '../components/post-game';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -306,7 +307,35 @@ export default class Game extends React.Component {
       },
       body: JSON.stringify(body)
     };
-    fetch(`/api/moves/${meta.gameId}`, res);
+    fetch(`/api/moves/${meta.gameId}`, res)
+      .then(result => {
+        if (phase === 'done') {
+          const { gamestate } = this.state;
+          let winner;
+          if (gamestate.draw) {
+            winner = 'draw';
+          } else if (gamestate.checkmate) {
+            if (gamestate.turn === 'bw') {
+              winner = 'white';
+            } else {
+              winner = 'black';
+            }
+          }
+          const body = { winner };
+          const res = {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          };
+          fetch(`/api/games/${meta.gameId}`, res)
+            .then(res => res.json())
+            .then(result => {
+              this.setState({ meta: result });
+            });
+        }
+      });
   }
 
   promotePawn(event) {
@@ -346,12 +375,12 @@ export default class Game extends React.Component {
   render() {
     const { board, meta, side, postGameOpen, selected, highlighted, phase } = this.state;
     const { whiteDead, blackDead, showCheck, showCheckmate, showDraw } = this.state;
-    const dummy = {
-      username: 'Anonymous'
-    };
     const playerDead = side === 'white' ? whiteDead : blackDead;
     const opponentDead = side === 'white' ? blackDead : whiteDead;
     const promoteFunc = phase === 'promoting' ? this.promotePawn : null;
+    const dummy = {
+      username: 'Anonymous'
+    };
     let player = dummy;
     let opponent = null;
     if (meta) {
@@ -366,10 +395,17 @@ export default class Game extends React.Component {
         }
       }
     }
+    const postGameContext = {
+      player,
+      opponent,
+      open: postGameOpen
+    };
 
     return (
       <div className="game page-height mx-auto">
-        <PostGame player={player} opponent={opponent} open={postGameOpen} closePostGame={this.closePostGame} />
+        <PostGameContext.Provider value={postGameContext} >
+          <PostGame closePostGame={this.closePostGame} />
+        </PostGameContext.Provider>
 
         <div className="w-100 d-block d-sm-none p-2">
           <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />

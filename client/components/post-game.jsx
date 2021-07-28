@@ -1,41 +1,47 @@
 import React from 'react';
+import PostGameContext from '../lib/post-game-context';
 
-export default function PostGame(props) {
-  const { player, opponent, open, closePostGame } = props;
-  if (!open) {
-    return null;
+export default class PostGame extends React.Component {
+  render() {
+    const { closePostGame } = this.props;
+    const { player, opponent, open } = this.context;
+    if (!open) {
+      return null;
+    }
+    return (
+      <div className="post-game w-100 position-fixed page-height">
+        <div className="row">
+          <div className="d-flex align-items-center my-2">
+            <Player player={player} win={true} />
+          </div>
+          <div className="d-flex align-items-center my-2">
+            <Player player={opponent} />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Resolution resolution="win" />
+          </div>
+        </div>
+
+        <div className="row justify-content-center my-3">
+          <div className="col">
+            <a className="return-to-game-btn" href={window.location.hash} onClick={closePostGame}>Return to Game</a>
+          </div>
+        </div>
+
+        <div className="row my-3">
+          <div className="col justify-content-center">
+            <a className="exit-btn" href="#join">Exit</a>
+          </div>
+        </div>
+      </div>
+    );
   }
-  return (
-    <div className="post-game w-100 position-fixed page-height">
-      <div className="row">
-        <div className="d-flex align-items-center my-2">
-          <Player player={player} win={true} />
-        </div>
-        <div className="d-flex align-items-center my-2">
-          <Player player={opponent} />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col">
-          <Resolution resolution="win" />
-        </div>
-      </div>
-
-      <div className="row justify-content-center my-3">
-        <div className="col">
-          <a className="return-to-game-btn" href={window.location.hash} onClick={closePostGame}>Return to Game</a>
-        </div>
-      </div>
-
-      <div className="row my-3">
-        <div className="col justify-content-center">
-          <a className="exit-btn" href="#join">Exit</a>
-        </div>
-      </div>
-    </div>
-  );
 }
+
+PostGame.contextType = PostGameContext;
 
 function Player(props) {
   let { player, win } = props;
