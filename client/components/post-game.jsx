@@ -13,12 +13,22 @@ export default function PostGame(props) {
         </div>
       </div>
 
-      <div className="row justify-content-center">
-        <Resolution resolution="win" />
+      <div className="row">
+        <div className="col">
+          <Resolution resolution="win" />
+        </div>
       </div>
 
       <div className="row justify-content-center my-3">
-        <a className="return-to-game-btn" href="">Return to Game</a>
+        <div className="col">
+          <a className="return-to-game-btn" href="">Return to Game</a>
+        </div>
+      </div>
+
+      <div className="row my-3">
+        <div className="col justify-content-center">
+          <a className="exit-btn" href="">Exit</a>
+        </div>
       </div>
     </div>
   );
