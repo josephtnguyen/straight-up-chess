@@ -101,6 +101,9 @@ export default class Game extends React.Component {
       if (nextGamestate.draw) {
         phase = 'done';
       }
+      if (meta.winner) {
+        phase = 'done';
+      }
 
       this.setState({
         meta,

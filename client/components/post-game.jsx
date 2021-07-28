@@ -12,6 +12,7 @@ export default class PostGame extends React.Component {
     const { socket, meta, opponent, resolution } = this.context;
     const { gameId } = meta;
     if (resolution !== 'undecided') {
+      window.location.hash = '#join';
       return;
     }
 
