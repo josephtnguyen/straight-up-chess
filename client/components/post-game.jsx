@@ -3,14 +3,21 @@ import PostGameContext from '../lib/post-game-context';
 
 export default class PostGame extends React.Component {
   render() {
-    const { closePostGame } = this.props;
+    const { closePostGame, media } = this.props;
     const { player, opponent, open, resolution } = this.context;
     if (!open) {
       return null;
     }
 
+    let postGameClass = 'post-game position-fixed page-height';
+    if (media === 'small') {
+      postGameClass += ' w-100 d-block d-sm-none';
+    } else if (media === 'large') {
+      postGameClass += ' w-auto d-none d-sm-block';
+    }
+
     return (
-      <div className="post-game w-100 position-fixed page-height">
+      <div className={postGameClass}>
         <div className="row">
           <div className="d-flex align-items-center my-2">
             <Player player={player} win={resolution === 'win'} />

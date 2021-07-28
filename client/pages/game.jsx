@@ -422,7 +422,7 @@ export default class Game extends React.Component {
     return (
       <div className="game page-height mx-auto">
         <PostGameContext.Provider value={postGameContext} >
-          <PostGame closePostGame={this.closePostGame} />
+          <PostGame closePostGame={this.closePostGame} media="small" />
         </PostGameContext.Provider>
 
         <div className="w-100 d-block d-sm-none p-2">
@@ -441,6 +441,9 @@ export default class Game extends React.Component {
           </div>
 
           <div className="col-auto d-none d-sm-block">
+            <PostGameContext.Provider value={postGameContext} >
+              <PostGame closePostGame={this.closePostGame} media="large" />
+            </PostGameContext.Provider>
             <div className="w-100 p-2">
               <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />
             </div>
