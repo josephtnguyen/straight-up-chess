@@ -31,7 +31,7 @@ export default class Game extends React.Component {
       postGameOpen: false,
       board: new Board(),
       gamestate: new GameState(),
-      phase: 'selecting',
+      phase: 'pending',
       selected: 0,
       highlighted: [],
       whiteDead: [],
@@ -94,7 +94,14 @@ export default class Game extends React.Component {
         }
       }
       // update phase
-      let phase = side[0] === nextGamestate.turn[0] ? 'selecting' : 'opponent turn';
+      let phase = 'pending';
+      if (meta.opponentName) {
+        if (side[0] === nextGamestate.turn[0]) {
+          phase = 'selecting';
+        } else {
+          phase = 'opponent turn';
+        }
+      }
       if (nextGamestate.checkmate) {
         phase = 'done';
       }
@@ -200,7 +207,7 @@ export default class Game extends React.Component {
     if (Number.isNaN(coord)) {
       return;
     }
-    if (phase === 'opponent turn' || phase === 'promoting' || phase === 'done') {
+    if (phase === 'opponent turn' || phase === 'pending' || phase === 'promoting' || phase === 'done') {
       return;
     }
 
