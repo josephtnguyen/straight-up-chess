@@ -25,10 +25,11 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: new Board(),
-      gamestate: new GameState(),
       meta: null,
       side: 'white',
+      postGameOpen: false,
+      board: new Board(),
+      gamestate: new GameState(),
       phase: 'selecting',
       selected: 0,
       highlighted: [],
@@ -46,6 +47,8 @@ export default class Game extends React.Component {
     this.resolveTurn = this.resolveTurn.bind(this);
     this.promotePawn = this.promotePawn.bind(this);
     this.removeBanner = this.removeBanner.bind(this);
+    this.openPostGame = this.openPostGame.bind(this);
+    this.closePostGame = this.closePostGame.bind(this);
   }
 
   componentDidMount() {
@@ -85,6 +88,7 @@ export default class Game extends React.Component {
         }
       }
       let phase = 'selecting';
+      let postGameOpen = false;
       // display banners when applicable
       let showCheck = 0;
       let showCheckmate = 0;
@@ -95,10 +99,12 @@ export default class Game extends React.Component {
       if (nextGamestate.checkmate) {
         showCheckmate = setTimeout(this.removeBanner, 2000);
         phase = 'done';
+        postGameOpen = true;
       }
       if (nextGamestate.draw) {
         showDraw = setTimeout(this.removeBanner, 2000);
         phase = 'done';
+        postGameOpen = true;
       }
       // promote any pawns
       if (promotion) {
@@ -109,6 +115,7 @@ export default class Game extends React.Component {
         board: nextBoard,
         gamestate: nextGamestate,
         phase,
+        postGameOpen,
         whiteDead: nextWhiteDead,
         blackDead: nextBlackDead,
         showCheck,
@@ -262,6 +269,7 @@ export default class Game extends React.Component {
   resolveTurn(nextGamestate, start, end, promotion = null) {
     const { meta } = this.state;
     let phase = 'opponent move';
+    let postGameOpen = false;
 
     // display banners when applicable
     let showCheck = 0;
@@ -273,14 +281,17 @@ export default class Game extends React.Component {
     if (nextGamestate.checkmate) {
       showCheckmate = setTimeout(this.removeBanner, 2000);
       phase = 'done';
+      postGameOpen = true;
     }
     if (nextGamestate.draw) {
       showDraw = setTimeout(this.removeBanner, 2000);
       phase = 'done';
+      postGameOpen = true;
     }
 
     this.setState({
       phase,
+      postGameOpen,
       showCheck,
       showCheckmate,
       showDraw
@@ -324,8 +335,16 @@ export default class Game extends React.Component {
     });
   }
 
+  openPostGame(event) {
+    this.setState({ postGameOpen: true });
+  }
+
+  closePostGame(event) {
+    this.setState({ postGameOpen: false });
+  }
+
   render() {
-    const { board, meta, side, selected, highlighted, phase } = this.state;
+    const { board, meta, side, postGameOpen, selected, highlighted, phase } = this.state;
     const { whiteDead, blackDead, showCheck, showCheckmate, showDraw } = this.state;
     const dummy = {
       username: 'Anonymous'
@@ -350,7 +369,7 @@ export default class Game extends React.Component {
 
     return (
       <div className="game page-height mx-auto">
-        <PostGame player={player} opponent={opponent} />
+        <PostGame player={player} opponent={opponent} open={postGameOpen} closePostGame={this.closePostGame} />
 
         <div className="w-100 d-block d-sm-none p-2">
           <PlayerPalette player={opponent} dead={opponentDead} cancelAction={this.cancelGame} />

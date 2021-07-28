@@ -93,8 +93,8 @@ app.post('/api/games', (req, res, next) => {
   }
   const opponentSide = playerSide === 'white' ? 'black' : 'white';
   const sql = `
-  insert into "games" ("message", "playerName", "playerSide", "opponentSide", "resolved")
-  values ($1, $2, $3, $4, FALSE)
+  insert into "games" ("message", "playerName", "playerSide", "opponentSide")
+  values ($1, $2, $3, $4)
   returning *
   `;
   const params = [message, playerName, playerSide, opponentSide];
