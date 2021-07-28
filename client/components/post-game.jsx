@@ -10,6 +10,8 @@ export default function PostGame(props) {
       <div className="d-flex align-items-center my-2">
         <Player player={opponent} />
       </div>
+
+      <Resolution resolution="win" />
     </div>
   );
 }
@@ -30,5 +32,28 @@ function Player(props) {
       <span className="font-24">{player.username}</span>
       {win && trophy}
     </>
+  );
+}
+
+function Resolution(props) {
+  const { resolution } = props;
+  let text;
+  if (resolution === 'win') {
+    text = (
+      <>
+        <img className="trophy mx-2" src="images/trophy.svg" />
+        {'You won!!'}
+        <img className="trophy mx-2" src="images/trophy.svg" />
+      </>
+    );
+  } else if (resolution === 'lose') {
+    text = 'You lost...';
+  } else if (resolution === 'draw') {
+    text = 'Draw!';
+  }
+  return (
+    <div className="resolution mt-5">
+      {text}
+    </div>
   );
 }
