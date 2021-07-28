@@ -35,19 +35,29 @@ export default function PlayerPalette(props) {
     );
   }
 
-  const { player, dead } = props;
+  const { player, dead, exitAction } = props;
   const deadPieces = dead.map((piece, index) => {
     return <img key={index} src={`/images/${piece}.svg`} className="dead chess-piece m-1" />;
   });
   return (
-    <div className="player-palette">
-      <div className="d-flex align-items-center">
-        <img src="images/default-avatar.png" className="palette-avatar" />
-        <span className="font-24 palette-username">{player.username}</span>
-      </div>
+    <div className="player-palette container">
+      <div className="row">
+        <div className="col">
+          <div className="d-flex align-items-center">
+            <img src="images/default-avatar.png" className="palette-avatar" />
+            <span className="font-24 palette-username">{player.username}</span>
+          </div>
 
-      <div className="d-flex flex-wrap">
-        {deadPieces}
+          <div className="d-flex flex-wrap">
+            {deadPieces}
+          </div>
+        </div>
+
+        {exitAction && (
+          <div className="col d-flex flex-column justify-content-start align-items-end p-1">
+            <img src="/images/exit-button.svg" onClick={exitAction} />
+          </div>
+        )}
       </div>
     </div>
   );
