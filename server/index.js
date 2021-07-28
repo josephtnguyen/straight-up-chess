@@ -86,6 +86,25 @@ app.get('/api/games/:gameId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/moves/:gameId', (req, res, next) => {
+  const gameId = req.params.gameId;
+  const gameIdInt = parseInt(gameId);
+  if (!Number.isInteger(gameIdInt)) {
+    throw new ClientError(400, `${gameId} is not a valid gameId`);
+  }
+
+  const sql = `
+  select *
+    from "moves"
+   where "gameId" = $1
+  order by "moveId"
+  `;
+  const params = [gameId];
+  db.query(sql, params)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
 app.post('/api/games', (req, res, next) => {
   const { playerName, playerSide, message } = req.body;
   if (!playerName || !playerSide || (!message && message !== '')) {
