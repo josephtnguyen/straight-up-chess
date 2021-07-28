@@ -417,6 +417,11 @@ a:hover {
   align-items: center;
 }
 
+.post-game-message {
+  font-size: 24px;
+  font-weight: 300;
+}
+
 .return-to-game-btn {
   background-color: #4e545e;
   color: #eaecee;

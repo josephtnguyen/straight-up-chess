@@ -9,6 +9,8 @@ export default class PostGame extends React.Component {
       return null;
     }
 
+    const exitText = resolution === 'undecided' ? 'Leave' : 'Exit';
+
     let postGameClass = 'post-game position-fixed page-height';
     if (media === 'small') {
       postGameClass += ' w-100 d-block d-sm-none';
@@ -41,7 +43,7 @@ export default class PostGame extends React.Component {
 
         <div className="row my-3">
           <div className="col justify-content-center">
-            <a className="exit-btn" href="#join">Exit</a>
+            <a className="exit-btn" href="#join">{exitText}</a>
           </div>
         </div>
       </div>
@@ -85,6 +87,12 @@ function Resolution(props) {
     text = 'You lost...';
   } else if (resolution === 'draw') {
     text = 'Draw!';
+  } else if (resolution === 'undecided') {
+    text = (
+      <p className="post-game-message p-2">
+        Leaving the game will forfeit the match.  Are you sure you want to leave?
+      </p>
+    );
   }
   return (
     <div className="resolution mt-5">
