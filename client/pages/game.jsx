@@ -179,6 +179,7 @@ export default class Game extends React.Component {
     });
 
     socket.on('forfeit', meta => {
+      setTimeout(this.openPostGame, 2000);
       this.setState({
         meta,
         phase: 'done',
