@@ -59,14 +59,56 @@ export default class Game extends React.Component {
     const side = params.get('side');
     this.socket = io('/', { query: { gameId } });
 
-    this.socket.on('room joined', meta => {
+    this.socket.on('room joined', payload => {
+      const { meta, moves } = payload;
+      const { board, gamestate, whiteDead, blackDead } = this.state;
+      const nextBoard = copy(board);
+      const nextGamestate = copy(gamestate);
+      const nextWhiteDead = whiteDead;
+      const nextBlackDead = blackDead;
       if (this.state.meta) {
         if (this.state.meta.opponentName) {
           return;
         }
       }
-      const phase = side === 'white' ? 'selecting' : 'opponent turn';
-      this.setState({ meta, side, phase });
+      // run through all moves
+      if (moves) {
+        for (const move of moves) {
+          const { start, end, promotion } = move;
+          const killed = this.executeMove(nextBoard, nextGamestate, start, end);
+          // add dead pieces to player palette
+          if (killed) {
+            if (killed[0] === 'w') {
+              nextWhiteDead.push(killed);
+            } else {
+              nextBlackDead.push(killed);
+            }
+          }
+          // promote any pawns
+          if (promotion) {
+            nextBoard[end].piece = promotion;
+            nextGamestate.promoting = null;
+          }
+        }
+      }
+      // update phase
+      let phase = side[0] === nextGamestate.turn[0] ? 'selecting' : 'opponent turn';
+      if (nextGamestate.checkmate) {
+        phase = 'done';
+      }
+      if (nextGamestate.draw) {
+        phase = 'done';
+      }
+
+      this.setState({
+        meta,
+        side,
+        phase,
+        board: nextBoard,
+        gamestate: nextGamestate,
+        whiteDead: nextWhiteDead,
+        blackDead: nextBlackDead
+      });
     });
 
     this.socket.on('move made', move => {

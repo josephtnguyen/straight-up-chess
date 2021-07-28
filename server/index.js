@@ -67,9 +67,8 @@ io.on('connection', socket => {
           `;
           const params = [gameId];
           db.query(sql, params)
-            .then(res => res.json())
             .then(result => {
-              payload.moves = result;
+              payload.moves = result.rows;
               io.to(gameId).emit('room joined', payload);
             })
             .catch(err => console.error(err));
