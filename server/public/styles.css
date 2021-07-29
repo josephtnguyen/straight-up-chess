@@ -101,7 +101,11 @@ a:hover {
 }
 
 .home {
-  padding-top: 7rem;
+  padding-top: 3rem;
+}
+
+.home-hero {
+  width: 5rem;
 }
 
 .gamemode {
@@ -117,6 +121,94 @@ a:hover {
 
 .gamemode:hover {
   background-color: #1a1c20;
+}
+
+.auth-btn {
+  color: #eaecee;
+  width: 111px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 350;
+  transition: background-color 0.25s ease;
+}
+
+.auth-btn.sign-up {
+  background-color: #be8647c2;
+}
+
+.auth-btn.sign-up:hover {
+  background-color: #be8647;
+}
+
+.auth-form {
+  position: relative;
+  width: 375px;
+  padding-top: 4rem;
+}
+
+.auth-title {
+  color: #32363c;
+  font-size: 36px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.auth-error-box {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(136px + 0.25rem);
+  border: 3px solid #e45252;
+  pointer-events: none;
+}
+
+.auth-error-box.show {
+  opacity: 1;
+}
+
+.auth-error-message {
+  position: absolute;
+  top: -1.5rem;
+  left: 0.5rem;
+  color: #e45252;
+  font-size: 14px;
+}
+
+.auth-field {
+  background-color: #4e545e;
+  height: 68px;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input {
+  background-color: #4e545e;
+  color: #eaecee;
+  border: none;
+  font-size: 24px;
+  font-weight: 350;
+  width: 250px;
+}
+
+.auth-input::placeholder {
+  color: #b5b5b5;
+}
+
+.auth-submit-btn {
+  color: #eaecee;
+  width: 100%;
+  height: 48px;
+  border-radius: 0;
+  font-size: 18px;
+}
+
+.auth-submit-btn.sign-up {
+  background-color: #be8647c2;
+}
+
+.auth-submit-btn.sign-up:hover {
+  background-color: #be8647;
 }
 
 .join-page {

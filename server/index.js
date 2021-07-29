@@ -3,6 +3,7 @@ const express = require('express');
 const pg = require('pg');
 const http = require('http');
 const { Server } = require('socket.io');
+const argon2 = require('argon2');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const ClientError = require('./client-error');
@@ -158,7 +159,7 @@ app.post('/api/games', (req, res, next) => {
   const params = [message, playerName, playerSide, opponentSide];
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows[0]);
+      res.status(201).json(result.rows[0]);
     })
     .catch(err => next(err));
 });
@@ -220,7 +221,33 @@ app.post('/api/moves/:gameId', (req, res, next) => {
       }
       const move = result.rows[0];
       io.to(gameId).emit('move made', move);
-      res.json(move);
+      res.status(201).json(move);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values ($1, $2)
+      on conflict ("username") do nothing
+      returning "userId", "username", "createdAt"
+      `;
+      const params = [username, hashedPassword];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      const [user] = result.rows;
+      const status = user ? 201 : 204;
+      res.status(status).json(user);
     })
     .catch(err => next(err));
 });
