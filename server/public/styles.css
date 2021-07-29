@@ -136,6 +136,36 @@ a:hover {
   background-color: #d3852c;
 }
 
+.auth-form {
+  width: 375px;
+}
+
+.auth-title {
+  color: #32363c;
+  font-size: 36px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.auth-field {
+  background-color: #4e545e;
+  height: 68px;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input {
+  background-color: #4e545e;
+  color: #eaecee;
+  border: none;
+  font-size: 24px;
+  font-weight: 350;
+}
+
+.auth-input::placeholder {
+  color: #b5b5b5;
+}
+
 .join-page {
   max-width: 700px;
 }
