@@ -126,7 +126,6 @@ export default class AuthForm extends React.Component {
             <img src="images/password-icon.svg" className="p-1" />
             <input
               required
-              autoFocus
               type={passwordType}
               name="password"
               id="password"
@@ -134,7 +133,7 @@ export default class AuthForm extends React.Component {
               value={password}
               className="auth-input"
               onChange={handleChange} />
-            <img src={toggle} className="p-1" onClick={togglePassword} />
+            <img src={toggle} className="p-1 cursor-pointer" onClick={togglePassword} />
           </div>
         </div>
 
