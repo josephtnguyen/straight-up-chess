@@ -17,6 +17,10 @@ export default class AuthForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
   togglePassword() {
     const { passwordType } = this.state;
     const nextType = passwordType === 'password' ? 'text' : 'password';
@@ -24,13 +28,13 @@ export default class AuthForm extends React.Component {
   }
 
   render() {
-    const { handleChange, togglePassword } = this;
+    const { handleChange, handleSubmit, togglePassword } = this;
     const { passwordType } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
 
     return (
       <form className="auth-form container page-height">
-        <div className="row">
+        <div className="row my-4">
           <div className="col text-center">
             <label htmlFor="username">
               <h1 className="auth-title">SIGN UP</h1>
@@ -65,6 +69,12 @@ export default class AuthForm extends React.Component {
               className="auth-input"
               onChange={handleChange} />
             <img src={toggle} className="p-1" onClick={togglePassword} />
+          </div>
+        </div>
+
+        <div className="row my-4">
+          <div className="col p-0">
+            <button className="auth-submit-btn sign-up" onSubmit={handleSubmit}>Sign Up</button>
           </div>
         </div>
       </form>
