@@ -30,6 +30,7 @@ export default class AuthForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
+
     let usernameTooShort = false;
     let passwordTooShort = false;
     if (username.length < 4) {
@@ -38,8 +39,21 @@ export default class AuthForm extends React.Component {
     if (password.length < 6) {
       passwordTooShort = true;
     }
+    if (usernameTooShort || passwordTooShort) {
+      this.setState({ usernameTooShort, passwordTooShort });
+      return;
+    }
 
-    this.setState({ usernameTooShort, passwordTooShort });
+    const body = { username, password };
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch('/api/auth/sign-up', req);
+    this.setState({ username: '', password: '', usernameTooShort, passwordTooShort });
   }
 
   togglePassword() {
