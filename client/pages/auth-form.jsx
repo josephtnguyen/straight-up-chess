@@ -6,23 +6,40 @@ export default class AuthForm extends React.Component {
     this.state = {
       username: '',
       password: '',
-      passwordType: 'password'
+      passwordType: 'password',
+      usernameTooShort: false,
+      usernameTooLong: false,
+      passwordTooShort: false
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.togglePassword = this.togglePassword.bind(this);
   }
 
   handleChange(event) {
     const { name, value } = event.target;
     let newValue = value;
+    let usernameTooLong = false;
     if (name === 'username' && newValue.length > 16) {
       newValue = this.state.username;
+      usernameTooLong = true;
     }
-    this.setState({ [name]: newValue });
+    this.setState({ [name]: newValue, usernameTooLong });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    const { username, password } = this.state;
+    let usernameTooShort = false;
+    let passwordTooShort = false;
+    if (username.length < 4) {
+      usernameTooShort = true;
+    }
+    if (password.length < 6) {
+      passwordTooShort = true;
+    }
+
+    this.setState({ usernameTooShort, passwordTooShort });
   }
 
   togglePassword() {
@@ -33,17 +50,31 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { username, password, passwordType } = this.state;
+    const { username, password, passwordType, usernameTooShort, usernameTooLong, passwordTooShort } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
+    let errorClass = 'auth-error-box';
+    let errorMessage = '';
+    if (usernameTooShort || usernameTooLong || passwordTooShort) {
+      errorClass += ' show';
+      if (usernameTooShort || usernameTooLong) {
+        errorMessage = 'Username must be 4-16 characters';
+      } else if (passwordTooShort) {
+        errorMessage = 'Password must be at least 6 characters';
+      }
+    }
 
     return (
-      <form className="auth-form container page-height">
-        <div className="row my-4">
+      <form className="auth-form container page-height" onSubmit={handleSubmit}>
+        <div className="row my-5">
           <div className="col text-center">
             <label htmlFor="username">
               <h1 className="auth-title">SIGN UP</h1>
             </label>
           </div>
+        </div>
+
+        <div className={errorClass}>
+          <p className="auth-error-message">{errorMessage}</p>
         </div>
 
         <div className="row">
@@ -80,7 +111,7 @@ export default class AuthForm extends React.Component {
 
         <div className="row my-4">
           <div className="col p-0">
-            <button className="auth-submit-btn sign-up" onSubmit={handleSubmit}>Sign Up</button>
+            <button className="auth-submit-btn sign-up">Sign Up</button>
           </div>
         </div>
       </form>

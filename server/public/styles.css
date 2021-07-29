@@ -137,6 +137,7 @@ a:hover {
 }
 
 .auth-form {
+  position: relative;
   width: 375px;
   padding-top: 4rem;
 }
@@ -146,6 +147,28 @@ a:hover {
   font-size: 36px;
   font-weight: normal;
   text-align: center;
+}
+
+.auth-error-box {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(136px + 0.25rem);
+  border: 3px solid #e45252;
+  pointer-events: none;
+}
+
+.auth-error-box.show {
+  opacity: 1;
+}
+
+.auth-error-message {
+  position: absolute;
+  top: -1.5rem;
+  left: 0.5rem;
+  color: #e45252;
+  font-size: 14px;
 }
 
 .auth-field {
