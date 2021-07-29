@@ -4,7 +4,8 @@ export default class AuthForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: ''
+      username: '',
+      password: ''
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -35,6 +36,19 @@ export default class AuthForm extends React.Component {
               type="text"
               name="username"
               placeholder="Username"
+              className="auth-input"
+              onChange={handleChange} />
+          </div>
+        </div>
+        <div className="row pt-1">
+          <div className="col auth-field">
+            <img src="images/password-icon.svg" className="p-1" />
+            <input
+              required
+              autoFocus
+              type="password"
+              name="password"
+              placeholder="Password"
               className="auth-input"
               onChange={handleChange} />
           </div>
