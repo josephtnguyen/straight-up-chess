@@ -9,6 +9,7 @@ export default class AuthForm extends React.Component {
       passwordType: 'password',
       usernameTooShort: false,
       usernameTooLong: false,
+      usernameTaken: false,
       passwordTooShort: false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -52,8 +53,20 @@ export default class AuthForm extends React.Component {
       },
       body: JSON.stringify(body)
     };
-    fetch('/api/auth/sign-up', req);
-    this.setState({ username: '', password: '', usernameTooShort, passwordTooShort });
+    fetch('/api/auth/sign-up', req)
+      .then(res => {
+        if (res.status === 204) {
+          this.setState({ usernameTooShort, usernameTaken: true, passwordTooShort });
+          return;
+        }
+        return res.json();
+      })
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        this.setState({ username: '', password: '', usernameTooShort, usernameTaken: false, passwordTooShort });
+      });
   }
 
   togglePassword() {
@@ -64,16 +77,18 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { username, password, passwordType, usernameTooShort, usernameTooLong, passwordTooShort } = this.state;
+    const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
     let errorClass = 'auth-error-box';
     let errorMessage = '';
-    if (usernameTooShort || usernameTooLong || passwordTooShort) {
+    if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
       errorClass += ' show';
       if (usernameTooShort || usernameTooLong) {
         errorMessage = 'Username must be 4-16 characters';
       } else if (passwordTooShort) {
         errorMessage = 'Password must be at least 6 characters';
+      } else if (usernameTaken) {
+        errorMessage = 'Username is already taken';
       }
     }
 
