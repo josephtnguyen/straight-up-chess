@@ -5,9 +5,11 @@ export default class AuthForm extends React.Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      passwordType: 'password'
     };
     this.handleChange = this.handleChange.bind(this);
+    this.togglePassword = this.togglePassword.bind(this);
   }
 
   handleChange(event) {
@@ -15,8 +17,17 @@ export default class AuthForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  togglePassword() {
+    const { passwordType } = this.state;
+    const nextType = passwordType === 'password' ? 'text' : 'password';
+    this.setState({ passwordType: nextType });
+  }
+
   render() {
-    const { handleChange } = this;
+    const { handleChange, togglePassword } = this;
+    const { passwordType } = this.state;
+    const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
+
     return (
       <form className="auth-form container page-height">
         <div className="row">
@@ -35,6 +46,7 @@ export default class AuthForm extends React.Component {
               autoFocus
               type="text"
               name="username"
+              id="username"
               placeholder="Username"
               className="auth-input"
               onChange={handleChange} />
@@ -46,11 +58,13 @@ export default class AuthForm extends React.Component {
             <input
               required
               autoFocus
-              type="password"
+              type={passwordType}
               name="password"
+              id="password"
               placeholder="Password"
               className="auth-input"
               onChange={handleChange} />
+            <img src={toggle} className="p-1" onClick={togglePassword} />
           </div>
         </div>
       </form>
