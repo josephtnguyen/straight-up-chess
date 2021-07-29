@@ -119,6 +119,23 @@ a:hover {
   background-color: #1a1c20;
 }
 
+.auth-btn {
+  color: #eaecee;
+  width: 111px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 350;
+  transition: background-color 0.25s ease;
+}
+
+.auth-btn.sign-up {
+  background-color: #be8647;
+}
+
+.auth-btn.sign-up:hover {
+  background-color: #d3852c;
+}
+
 .join-page {
   max-width: 700px;
 }

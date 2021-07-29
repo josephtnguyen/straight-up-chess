@@ -1,11 +1,22 @@
 import React from 'react';
+import AuthRouteButton from '../components/auth-route-button';
 import GameModeButton from '../components/game-mode-button';
 
 export default class Home extends React.Component {
   render() {
     return (
       <div className="home container d-flex flex-column align-items-center page-height">
-        <GameModeButton type="m" />
+        <div className="row my-4">
+          <div className="col">
+            <GameModeButton type="m" />
+          </div>
+        </div>
+
+        <div className="row my-4">
+          <div className="col">
+            <AuthRouteButton type="sign-up" />
+          </div>
+        </div>
       </div>
 
     );
