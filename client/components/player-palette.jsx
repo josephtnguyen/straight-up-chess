@@ -56,7 +56,7 @@ export default function PlayerPalette(props) {
         {player.side && (
           exitAction && (
             <div className="col d-flex flex-column justify-content-start align-items-end p-1">
-              <img src="/images/exit-button.svg" onClick={exitAction} />
+              <img className="cursor-pointer" src="/images/exit-button.svg" onClick={exitAction} />
             </div>
           )
         )}

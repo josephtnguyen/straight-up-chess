@@ -31,6 +31,10 @@ a:hover {
   height: calc(100vh - 66px);
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .header {
   background-color: #32363c;
   height: 66px;

@@ -66,13 +66,17 @@ export default class PostGame extends React.Component {
 
         <div className="row justify-content-center my-3">
           <div className="col">
-            <a className="return-to-game-btn" href={window.location.hash} onClick={closePostGame}>Return to Game</a>
+            <button className="return-to-game-btn" onClick={closePostGame}>
+              Return to Game
+            </button>
           </div>
         </div>
 
         <div className="row my-3">
           <div className="col justify-content-center">
-            <a className="exit-btn" onClick={this.handleExit}>{exitText}</a>
+            <button className="exit-btn" onClick={this.handleExit}>
+              {exitText}
+            </button>
           </div>
         </div>
       </div>
@@ -93,8 +97,8 @@ function Player(props) {
   const trophy = <img className="trophy mx-2" src="images/trophy.svg" />;
   return (
     <>
-      <button className="dot gray mx-1" />
-      <button className="btn avatar mx-2" style={avatarStyle} />
+      <div className="dot gray mx-1" />
+      <div className="avatar mx-2" style={avatarStyle} />
       <span className="font-24">{player.username}</span>
       {win && trophy}
     </>
