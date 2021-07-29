@@ -34,7 +34,7 @@ export default class Post extends React.Component {
       : 'white';
     const board = new Board();
     return (
-      <div className="post p-2" onClick={this.handleSelect}>
+      <div className="post cursor-pointer p-2" onClick={this.handleSelect}>
         <div className="row">
           <div className="col-4">
             <div className="post-board-container">

@@ -2,12 +2,43 @@ import React from 'react';
 import PostGameContext from '../lib/post-game-context';
 
 export default class PostGame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleExit = this.handleExit.bind(this);
+  }
+
+  handleExit(event) {
+    event.preventDefault();
+    const { socket, meta, opponent, resolution } = this.context;
+    const { gameId } = meta;
+    if (resolution !== 'undecided') {
+      window.location.hash = '#join';
+      return;
+    }
+
+    const body = { winner: opponent.side };
+    const req = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch(`/api/games/${gameId}`, req)
+      .then(result => {
+        socket.emit('forfeit');
+        window.location.hash = '#join';
+      });
+  }
+
   render() {
     const { closePostGame, media } = this.props;
     const { player, opponent, open, resolution } = this.context;
     if (!open) {
       return null;
     }
+
+    const exitText = resolution === 'undecided' ? 'Leave' : 'Exit';
 
     let postGameClass = 'post-game position-fixed page-height';
     if (media === 'small') {
@@ -35,13 +66,17 @@ export default class PostGame extends React.Component {
 
         <div className="row justify-content-center my-3">
           <div className="col">
-            <a className="return-to-game-btn" href={window.location.hash} onClick={closePostGame}>Return to Game</a>
+            <button className="return-to-game-btn" onClick={closePostGame}>
+              Return to Game
+            </button>
           </div>
         </div>
 
         <div className="row my-3">
           <div className="col justify-content-center">
-            <a className="exit-btn" href="#join">Exit</a>
+            <button className="exit-btn" onClick={this.handleExit}>
+              {exitText}
+            </button>
           </div>
         </div>
       </div>
@@ -62,8 +97,8 @@ function Player(props) {
   const trophy = <img className="trophy mx-2" src="images/trophy.svg" />;
   return (
     <>
-      <button className="dot gray mx-1" />
-      <button className="btn avatar mx-2" style={avatarStyle} />
+      <div className="dot gray mx-1" />
+      <div className="avatar mx-2" style={avatarStyle} />
       <span className="font-24">{player.username}</span>
       {win && trophy}
     </>
@@ -85,6 +120,12 @@ function Resolution(props) {
     text = 'You lost...';
   } else if (resolution === 'draw') {
     text = 'Draw!';
+  } else if (resolution === 'undecided') {
+    text = (
+      <p className="post-game-message p-2">
+        Leaving the game will forfeit the match.  Are you sure you want to leave?
+      </p>
+    );
   }
   return (
     <div className="resolution mt-5">
