@@ -14,7 +14,11 @@ export default class AuthForm extends React.Component {
 
   handleChange(event) {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    let newValue = value;
+    if (name === 'username' && newValue.length > 16) {
+      newValue = this.state.username;
+    }
+    this.setState({ [name]: newValue });
   }
 
   handleSubmit(event) {
@@ -29,7 +33,7 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { passwordType } = this.state;
+    const { username, password, passwordType } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
 
     return (
@@ -52,6 +56,7 @@ export default class AuthForm extends React.Component {
               name="username"
               id="username"
               placeholder="Username"
+              value={username}
               className="auth-input"
               onChange={handleChange} />
           </div>
@@ -66,6 +71,7 @@ export default class AuthForm extends React.Component {
               name="password"
               id="password"
               placeholder="Password"
+              value={password}
               className="auth-input"
               onChange={handleChange} />
             <img src={toggle} className="p-1" onClick={togglePassword} />
