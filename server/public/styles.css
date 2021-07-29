@@ -101,7 +101,11 @@ a:hover {
 }
 
 .home {
-  padding-top: 7rem;
+  padding-top: 3rem;
+}
+
+.home-hero {
+  width: 5rem;
 }
 
 .gamemode {
