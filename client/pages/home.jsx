@@ -12,8 +12,9 @@ export default class Home extends React.Component {
           </div>
         </div>
 
-        <div className="row my-4">
+        <div className="row">
           <div className="col">
+            <GameModeButton type="s" />
             <GameModeButton type="m" />
           </div>
         </div>
