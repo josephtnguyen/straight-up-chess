@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactBoard from './board';
 import Board from '../lib/board';
+import GlobalContext from '../lib/global-context';
 
 export default class Post extends React.Component {
   constructor(props) {
@@ -10,8 +11,9 @@ export default class Post extends React.Component {
 
   handleSelect() {
     const { meta } = this.props;
+    const { user } = this.context;
     const body = {
-      opponentName: 'Anonymous'
+      opponentName: user.username
     };
     const req = {
       method: 'POST',
@@ -50,3 +52,5 @@ export default class Post extends React.Component {
     );
   }
 }
+
+Post.contextType = GlobalContext;
