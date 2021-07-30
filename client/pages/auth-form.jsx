@@ -16,6 +16,11 @@ export default class AuthForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.togglePassword = this.togglePassword.bind(this);
+    this.clearError = this.clearError.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('hashchange', this.clearError);
   }
 
   handleChange(event) {
@@ -32,6 +37,7 @@ export default class AuthForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
+    const { path } = this.context;
 
     let usernameTooShort = false;
     let passwordTooShort = false;
@@ -46,34 +52,47 @@ export default class AuthForm extends React.Component {
       return;
     }
 
-    const body = { username, password };
-    const req = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    };
-    fetch('/api/auth/sign-up', req)
-      .then(res => {
-        if (res.status === 204) {
-          this.setState({ usernameTooShort, usernameTaken: true, passwordTooShort });
-          return;
-        }
-        return res.json();
-      })
-      .then(result => {
-        if (!result) {
-          return;
-        }
-        this.setState({ username: '', password: '', usernameTooShort, usernameTaken: false, passwordTooShort });
-      });
+    if (path === 'sign-up') {
+      const body = { username, password };
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      };
+      fetch('/api/auth/sign-up', req)
+        .then(res => {
+          if (res.status === 204) {
+            this.setState({ usernameTooShort, usernameTaken: true, passwordTooShort });
+            return;
+          }
+          return res.json();
+        })
+        .then(result => {
+          if (!result) {
+            return;
+          }
+          this.setState({ username: '', password: '', usernameTooShort, usernameTaken: false, passwordTooShort });
+        });
+    } else if (path === 'sign-in') {
+      this.setState({ usernameTooShort, usernameTaken: false, passwordTooShort });
+    }
   }
 
   togglePassword() {
     const { passwordType } = this.state;
     const nextType = passwordType === 'password' ? 'text' : 'password';
     this.setState({ passwordType: nextType });
+  }
+
+  clearError() {
+    this.setState({
+      usernameTooShort: false,
+      usernameTooLong: false,
+      usernameTaken: false,
+      passwordTooShort: false
+    });
   }
 
   render() {
@@ -113,6 +132,9 @@ export default class AuthForm extends React.Component {
       if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
         errorClass += ' show';
         errorMessage = 'Invalid login';
+        if (usernameTooLong) {
+          errorMessage = 'Username must be 4-16 characters';
+        }
       }
     }
 
