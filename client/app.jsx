@@ -19,6 +19,7 @@ export default class App extends React.Component {
     };
     this.handleClickNav = this.handleClickNav.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleSignOut = this.handleSignOut.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 
@@ -40,6 +41,11 @@ export default class App extends React.Component {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
     this.setState({ user });
+  }
+
+  handleSignOut() {
+    window.localStorage.removeItem('react-context-jwt');
+    this.setState({ user: { username: 'Anonymous' } });
   }
 
   renderPage() {
