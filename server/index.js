@@ -4,6 +4,7 @@ const pg = require('pg');
 const http = require('http');
 const { Server } = require('socket.io');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const ClientError = require('./client-error');
@@ -248,6 +249,39 @@ app.post('/api/auth/sign-up', (req, res, next) => {
       const [user] = result.rows;
       const status = user ? 201 : 204;
       res.status(status).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+
+  const sql = `
+  select "userId",
+         "hashedPassword"
+    from "users"
+   where "username" = $1
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(401, 'invalid login');
+      }
+      const { userId, hashedPassword } = result.rows[0];
+      return argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) {
+            throw new ClientError(401, 'invalid login');
+          }
+          const user = { userId, username };
+          const token = jwt.sign(user, process.env.TOKEN_SECRET);
+          res.json({ token, user: user });
+        });
     })
     .catch(err => next(err));
 });
