@@ -5,7 +5,7 @@ export default class LogInOut extends React.Component {
   render() {
     const { user, handleClickNav, handleSignOut } = this.context;
 
-    if (user.username === 'Anonymous') {
+    if (!user.userId) {
       return (
         <a className="nav-sign-in-out justify-content-start" href="#sign-in" onClick={handleClickNav}>Log In</a>
       );

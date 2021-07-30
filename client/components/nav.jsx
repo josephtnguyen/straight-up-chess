@@ -26,7 +26,7 @@ export default class Nav extends React.Component {
         text: 'Join Game'
       }
     ];
-    const links = user.username === 'Anonymous' ? loggedOutLinks : loggedInLinks;
+    const links = !user.userId ? loggedOutLinks : loggedInLinks;
     const navBackgroundClass = 'nav-background position-absolute page-height' + (navOpen ? ' show' : '');
     const navClass = 'nav position-absolute flex-column page-height' + (navOpen ? ' show' : '');
 
