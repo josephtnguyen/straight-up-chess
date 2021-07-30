@@ -8,7 +8,6 @@ export default class SignIn extends React.Component {
       username: '',
       password: '',
       passwordType: 'password',
-      usernameTooLong: false,
       invalidLogin: false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -18,13 +17,7 @@ export default class SignIn extends React.Component {
 
   handleChange(event) {
     const { name, value } = event.target;
-    let newValue = value;
-    let usernameTooLong = false;
-    if (name === 'username' && newValue.length > 16) {
-      newValue = this.state.username;
-      usernameTooLong = true;
-    }
-    this.setState({ [name]: newValue, usernameTooLong });
+    this.setState({ [name]: value });
   }
 
   handleSubmit(event) {
@@ -63,16 +56,13 @@ export default class SignIn extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { username, password, passwordType, usernameTooLong, invalidLogin } = this.state;
+    const { username, password, passwordType, invalidLogin } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
     let errorClass = 'auth-error-box';
     let errorMessage = '';
-    if (usernameTooLong || invalidLogin) {
+    if (invalidLogin) {
       errorClass += ' show';
       errorMessage = 'Invalid login';
-      if (usernameTooLong) {
-        errorMessage = 'Username must be 4-16 characters';
-      }
     }
 
     return (
