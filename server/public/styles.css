@@ -104,6 +104,16 @@ a:hover {
   margin: 0.5rem 0;
 }
 
+.nav-sign-in-out {
+  color: #b5b5b5;
+  font-size: 24px;
+  transition: color 0.25s ease;
+}
+
+.nav-sign-in-out:hover {
+  color: #4e545e;
+}
+
 .home {
   padding-top: 3rem;
 }

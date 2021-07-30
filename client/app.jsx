@@ -8,6 +8,7 @@ import Game from './pages/game';
 import AuthForm from './pages/auth-form';
 import parseRoute from './lib/parse-route';
 import GlobalContext from './lib/global-context';
+import decodeToken from './lib/decode-token';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class App extends React.Component {
     this.state = {
       navOpen: false,
       route: parseRoute(window.location.hash),
-      user: { username: 'Anonymous' }
+      user: null
     };
     this.handleClickNav = this.handleClickNav.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
@@ -27,6 +28,10 @@ export default class App extends React.Component {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+
+    const token = window.localStorage.getItem('react-context-jwt');
+    const user = token ? decodeToken(token) : { username: 'Anonymous' };
+    this.setState({ user });
   }
 
   handleClickNav() {
@@ -41,11 +46,14 @@ export default class App extends React.Component {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
     this.setState({ user });
+    window.location.hash = '#home';
   }
 
   handleSignOut() {
     window.localStorage.removeItem('react-context-jwt');
     this.setState({ user: { username: 'Anonymous' } });
+    this.handleClickNav();
+    window.location.hash = '#home';
   }
 
   renderPage() {
@@ -68,17 +76,24 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { navOpen, route } = this.state;
-    const { handleClickNav, handleSignIn } = this;
+    if (!this.state.user) {
+      return null;
+    }
+
+    const { navOpen, route, user } = this.state;
+    const { handleClickNav, handleSignIn, handleSignOut } = this;
     const contextValue = {
       route,
-      handleSignIn
+      user,
+      handleClickNav,
+      handleSignIn,
+      handleSignOut
     };
     return (
       <GlobalContext.Provider value={contextValue}>
         <>
           <Header navOpen={navOpen} handleClickNav={handleClickNav} />
-          <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
+          <Nav navOpen={navOpen} />
           {this.renderPage()}
         </>
       </GlobalContext.Provider>
