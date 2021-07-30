@@ -16,6 +16,8 @@ export default class AuthForm extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.validateSignUp = this.validateSignUp.bind(this);
+    this.validateSignIn = this.validateSignIn.bind(this);
     this.togglePassword = this.togglePassword.bind(this);
     this.clearError = this.clearError.bind(this);
   }
@@ -34,13 +36,14 @@ export default class AuthForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-    const { route, handleSignIn } = this.context; // eslint-disable-line
+    const { route } = this.context;
+    const { validateSignUp, validateSignIn } = this;
     const { path } = route;
 
     let usernameTooShort = false;
     let passwordTooShort = false;
-    let usernameTaken = false;
-    let invalidLogin = false;
+    const usernameTaken = false;
+    const invalidLogin = false;
     if (username.length < 4) {
       usernameTooShort = true;
     }
@@ -53,56 +56,69 @@ export default class AuthForm extends React.Component {
     }
 
     if (path === 'sign-up') {
-      const body = { username, password };
-      const req = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      };
-      fetch('/api/auth/sign-up', req)
-        .then(res => {
-          if (res.status === 204) {
-            usernameTaken = true;
-            this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
-            return;
-          }
-          return res.json();
-        })
-        .then(result => {
-          if (!result) {
-            return;
-          }
-          window.location.hash = '#sign-in';
-          usernameTaken = false;
-          this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
-        });
+      validateSignUp(usernameTooShort, passwordTooShort, usernameTaken, invalidLogin);
     } else if (path === 'sign-in') {
-      const body = { username, password };
-      const req = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      };
-      fetch('/api/auth/sign-in', req)
-        .then(res => {
-          if (res.status === 401) {
-            invalidLogin = true;
-            this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
-            return;
-          }
-          return res.json();
-        })
-        .then(result => {
-          if (!result) {
-            return;
-          }
-          handleSignIn(result);
-        });
+      validateSignIn(usernameTooShort, passwordTooShort, usernameTaken, invalidLogin);
     }
+  }
+
+  validateSignUp(usernameTooShort, passwordTooShort, usernameTaken, invalidLogin) {
+    const { username, password } = this.state;
+
+    const body = { username, password };
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch('/api/auth/sign-up', req)
+      .then(res => {
+        if (res.status === 204) {
+          usernameTaken = true;
+          this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
+          return;
+        }
+        return res.json();
+      })
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        window.location.hash = '#sign-in';
+        usernameTaken = false;
+        this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
+      });
+  }
+
+  validateSignIn(usernameTooShort, passwordTooShort, usernameTaken, invalidLogin) {
+    const { username, password } = this.state;
+    const { handleSignIn } = this.context;
+
+    const body = { username, password };
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
+    fetch('/api/auth/sign-in', req)
+      .then(res => {
+        if (res.status === 401) {
+          invalidLogin = true;
+          this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
+          return;
+        }
+        return res.json();
+      })
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        handleSignIn(result);
+      });
   }
 
   togglePassword() {

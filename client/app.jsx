@@ -29,7 +29,7 @@ export default class App extends React.Component {
       this.setState({ route: parseRoute(window.location.hash) });
     });
 
-    const token = window.localStorage.getItem('react-context-jwt');
+    const token = window.localStorage.getItem('chess-app-jwt');
     const user = token ? decodeToken(token) : { username: 'Anonymous' };
     this.setState({ user });
   }
@@ -44,13 +44,13 @@ export default class App extends React.Component {
 
   handleSignIn(result) {
     const { user, token } = result;
-    window.localStorage.setItem('react-context-jwt', token);
+    window.localStorage.setItem('chess-app-jwt', token);
     this.setState({ user });
     window.location.hash = '#home';
   }
 
   handleSignOut() {
-    window.localStorage.removeItem('react-context-jwt');
+    window.localStorage.removeItem('chess-app-jwt');
     this.setState({ user: { username: 'Anonymous' } });
     this.handleClickNav();
     window.location.hash = '#home';
