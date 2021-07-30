@@ -23,6 +23,10 @@ a:hover {
   color: #eaecee;
 }
 
+.font-14 {
+  font-size: 14px;
+}
+
 .font-24 {
   font-size: 24px;
 }
@@ -100,6 +104,16 @@ a:hover {
   margin: 0.5rem 0;
 }
 
+.nav-sign-in-out {
+  color: #b5b5b5;
+  font-size: 24px;
+  transition: color 0.25s ease;
+}
+
+.nav-sign-in-out:hover {
+  color: #4e545e;
+}
+
 .home {
   padding-top: 3rem;
 }
@@ -129,7 +143,7 @@ a:hover {
   height: 40px;
   font-size: 24px;
   font-weight: 350;
-  transition: background-color 0.25s ease;
+  transition: background-color 0.125s ease;
 }
 
 .auth-btn.sign-up {
@@ -138,6 +152,14 @@ a:hover {
 
 .auth-btn.sign-up:hover {
   background-color: #be8647;
+}
+
+.auth-btn.sign-in {
+  background-color: #0173fac2;
+}
+
+.auth-btn.sign-in:hover {
+  background-color: #0173fa;
 }
 
 .auth-form {
@@ -201,6 +223,7 @@ a:hover {
   height: 48px;
   border-radius: 0;
   font-size: 18px;
+  transition: background-color 0.125s ease;
 }
 
 .auth-submit-btn.sign-up {
@@ -209,6 +232,37 @@ a:hover {
 
 .auth-submit-btn.sign-up:hover {
   background-color: #be8647;
+}
+
+.auth-submit-btn.sign-in {
+  background-color: #0173fac2;
+}
+
+.auth-submit-btn.sign-in:hover {
+  background-color: #0173fa;
+}
+
+.auth-switch-anchor {
+  display: inline;
+  font-weight: bold;
+}
+
+.auth-switch-anchor.sign-up {
+  color: #be8647c2;
+}
+
+.auth-switch-anchor.sign-up:hover {
+  color: #be8647;
+  text-decoration: underline;
+}
+
+.auth-switch-anchor.sign-in {
+  color: #0173fac2;
+}
+
+.auth-switch-anchor.sign-in:hover {
+  color: #0173fa;
+  text-decoration: underline;
 }
 
 .join-page {

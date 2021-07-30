@@ -1,16 +1,14 @@
 import React from 'react';
+import GlobalContext from '../lib/global-context';
 
-export default class AuthForm extends React.Component {
+export default class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
       password: '',
       passwordType: 'password',
-      usernameTooShort: false,
-      usernameTooLong: false,
-      usernameTaken: false,
-      passwordTooShort: false
+      invalidLogin: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,32 +17,13 @@ export default class AuthForm extends React.Component {
 
   handleChange(event) {
     const { name, value } = event.target;
-    let newValue = value;
-    let usernameTooLong = false;
-    if (name === 'username' && newValue.length > 16) {
-      newValue = this.state.username;
-      usernameTooLong = true;
-    }
-    this.setState({ [name]: newValue, usernameTooLong });
+    this.setState({ [name]: value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-
-    let usernameTooShort = false;
-    let passwordTooShort = false;
-    if (username.length < 4) {
-      usernameTooShort = true;
-    }
-    if (password.length < 6) {
-      passwordTooShort = true;
-    }
-    if (usernameTooShort || passwordTooShort) {
-      this.setState({ usernameTooShort, passwordTooShort });
-      return;
-    }
-
+    const { handleSignIn } = this.context;
     const body = { username, password };
     const req = {
       method: 'POST',
@@ -53,10 +32,10 @@ export default class AuthForm extends React.Component {
       },
       body: JSON.stringify(body)
     };
-    fetch('/api/auth/sign-up', req)
+    fetch('/api/auth/sign-in', req)
       .then(res => {
-        if (res.status === 204) {
-          this.setState({ usernameTooShort, usernameTaken: true, passwordTooShort });
+        if (res.status === 401) {
+          this.setState({ invalidLogin: true });
           return;
         }
         return res.json();
@@ -65,7 +44,7 @@ export default class AuthForm extends React.Component {
         if (!result) {
           return;
         }
-        this.setState({ username: '', password: '', usernameTooShort, usernameTaken: false, passwordTooShort });
+        handleSignIn(result);
       });
   }
 
@@ -77,19 +56,13 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort } = this.state;
+    const { username, password, passwordType, invalidLogin } = this.state;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
     let errorClass = 'auth-error-box';
     let errorMessage = '';
-    if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
+    if (invalidLogin) {
       errorClass += ' show';
-      if (usernameTooShort || usernameTooLong) {
-        errorMessage = 'Username must be 4-16 characters';
-      } else if (passwordTooShort) {
-        errorMessage = 'Password must be at least 6 characters';
-      } else if (usernameTaken) {
-        errorMessage = 'Username is already taken';
-      }
+      errorMessage = 'Invalid login';
     }
 
     return (
@@ -97,7 +70,7 @@ export default class AuthForm extends React.Component {
         <div className="row my-5">
           <div className="col text-center">
             <label htmlFor="username">
-              <h1 className="auth-title">SIGN UP</h1>
+              <h1 className="auth-title">LOGIN</h1>
             </label>
           </div>
         </div>
@@ -139,10 +112,20 @@ export default class AuthForm extends React.Component {
 
         <div className="row my-4">
           <div className="col p-0">
-            <button className="auth-submit-btn sign-up">Sign Up</button>
+            <button className="auth-submit-btn sign-in">Log In</button>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <p className="font-14 text-center">
+              {"Don't have an account?"} <a href="#sign-up" className="auth-switch-anchor sign-up">SIGN UP</a>
+            </p>
           </div>
         </div>
       </form>
     );
   }
 }
+
+SignIn.contextType = GlobalContext;

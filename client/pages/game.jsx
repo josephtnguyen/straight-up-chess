@@ -6,7 +6,7 @@ import Banner from '../components/banner';
 import PostGame from '../components/post-game';
 import Board from '../lib/board';
 import GameState from '../lib/gamestate';
-import RouteContext from '../lib/route-context';
+import GlobalContext from '../lib/global-context';
 import PostGameContext from '../lib/post-game-context';
 
 import copy from '../lib/copy';
@@ -55,7 +55,8 @@ export default class Game extends React.Component {
   }
 
   componentDidMount() {
-    const { params } = this.context;
+    const { route } = this.context;
+    const { params } = route;
     const gameId = params.get('gameId');
     const side = params.get('side');
     this.socket = io('/', { query: { gameId } });
@@ -202,13 +203,27 @@ export default class Game extends React.Component {
   }
 
   handleClick(event) {
-    const { phase } = this.state;
+    const { phase, meta, side } = this.state;
     const { showOptions, decideMove } = this;
+    const { user } = this.context;
     const coord = parseInt(event.target.closest('.tile').id);
     if (Number.isNaN(coord)) {
       return;
     }
-    if (phase === 'opponent turn' || phase === 'pending' || phase === 'promoting' || phase === 'done') {
+    if (phase === 'opponent turn' ||
+    phase === 'pending' ||
+    phase === 'promoting' ||
+    phase === 'done') {
+      return;
+    }
+    // prevent spectators from moving pieces
+    let player = meta.playerName;
+    if (meta.opponentName) {
+      if (side !== meta.playerSide) {
+        player = meta.opponentName;
+      }
+    }
+    if (user.username !== player) {
       return;
     }
 
@@ -528,4 +543,4 @@ export default class Game extends React.Component {
   }
 }
 
-Game.contextType = RouteContext;
+Game.contextType = GlobalContext;
