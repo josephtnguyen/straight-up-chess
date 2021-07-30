@@ -203,13 +203,27 @@ export default class Game extends React.Component {
   }
 
   handleClick(event) {
-    const { phase } = this.state;
+    const { phase, meta, side } = this.state;
     const { showOptions, decideMove } = this;
+    const { user } = this.context;
     const coord = parseInt(event.target.closest('.tile').id);
     if (Number.isNaN(coord)) {
       return;
     }
-    if (phase === 'opponent turn' || phase === 'pending' || phase === 'promoting' || phase === 'done') {
+    if (phase === 'opponent turn' ||
+    phase === 'pending' ||
+    phase === 'promoting' ||
+    phase === 'done') {
+      return;
+    }
+    // prevent spectators from moving pieces
+    let player = meta.playerName;
+    if (meta.opponentName) {
+      if (side !== meta.playerSide) {
+        player = meta.opponentName;
+      }
+    }
+    if (user.username !== player) {
       return;
     }
 
