@@ -5,10 +5,11 @@ import Home from './pages/home';
 import JoinGame from './pages/join-game';
 import PostForm from './pages/post-form';
 import Game from './pages/game';
-import AuthForm from './pages/auth-form';
 import parseRoute from './lib/parse-route';
 import GlobalContext from './lib/global-context';
 import decodeToken from './lib/decode-token';
+import SignUp from './pages/sign-up';
+import SignIn from './pages/sign-in';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -67,9 +68,9 @@ export default class App extends React.Component {
       case 'game':
         return <Game />;
       case 'sign-up':
-        return <AuthForm />;
+        return <SignUp />;
       case 'sign-in':
-        return <AuthForm />;
+        return <SignIn />;
       default:
         window.location.hash = '#home';
     }
