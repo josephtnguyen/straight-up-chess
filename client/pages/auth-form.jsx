@@ -1,5 +1,5 @@
 import React from 'react';
-import RouteContext from '../lib/route-context';
+import GlobalContext from '../lib/global-context';
 
 export default class AuthForm extends React.Component {
   constructor(props) {
@@ -37,7 +37,8 @@ export default class AuthForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-    const { path } = this.context;
+    const { route, handleSignIn } = this.context; // eslint-disable-line
+    const { path } = route;
 
     let usernameTooShort = false;
     let passwordTooShort = false;
@@ -98,7 +99,7 @@ export default class AuthForm extends React.Component {
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
     const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort } = this.state;
-    const { path } = this.context;
+    const { path } = this.context.route;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
     let headingText, submitText, submitButtonClass, switchText, anchorText, anchorClass, anchorHref;
     let errorClass = 'auth-error-box';
@@ -201,4 +202,4 @@ export default class AuthForm extends React.Component {
   }
 }
 
-AuthForm.contextType = RouteContext;
+AuthForm.contextType = GlobalContext;

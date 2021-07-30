@@ -7,14 +7,15 @@ import PostForm from './pages/post-form';
 import Game from './pages/game';
 import AuthForm from './pages/auth-form';
 import parseRoute from './lib/parse-route';
-import RouteContext from './lib/route-context';
+import GlobalContext from './lib/global-context';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       navOpen: false,
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      user: { username: 'Anonymous' }
     };
     this.handleClickNav = this.handleClickNav.bind(this);
     this.renderPage = this.renderPage.bind(this);
@@ -32,6 +33,12 @@ export default class App extends React.Component {
     } else {
       this.setState({ navOpen: true });
     }
+  }
+
+  handleSignIn(result) {
+    const { user, token } = result;
+    window.localStorage.setItem('react-context-jwt', token);
+    this.setState({ user });
   }
 
   renderPage() {
@@ -54,16 +61,20 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { navOpen } = this.state;
-    const { handleClickNav } = this;
+    const { navOpen, route } = this.state;
+    const { handleClickNav, handleSignIn } = this;
+    const contextValue = {
+      route,
+      handleSignIn
+    };
     return (
-      <RouteContext.Provider value={this.state.route}>
+      <GlobalContext.Provider value={contextValue}>
         <>
           <Header navOpen={navOpen} handleClickNav={handleClickNav} />
           <Nav navOpen={navOpen} handleClickNav={handleClickNav} />
           {this.renderPage()}
         </>
-      </RouteContext.Provider>
+      </GlobalContext.Provider>
     );
   }
 }

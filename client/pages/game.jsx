@@ -6,7 +6,7 @@ import Banner from '../components/banner';
 import PostGame from '../components/post-game';
 import Board from '../lib/board';
 import GameState from '../lib/gamestate';
-import RouteContext from '../lib/route-context';
+import GlobalContext from '../lib/global-context';
 import PostGameContext from '../lib/post-game-context';
 
 import copy from '../lib/copy';
@@ -528,4 +528,4 @@ export default class Game extends React.Component {
   }
 }
 
-Game.contextType = RouteContext;
+Game.contextType = GlobalContext;
