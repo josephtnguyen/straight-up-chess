@@ -20,10 +20,6 @@ export default class AuthForm extends React.Component {
     this.clearError = this.clearError.bind(this);
   }
 
-  componentDidMount() {
-    window.addEventListener('hashchange', this.clearError);
-  }
-
   handleChange(event) {
     const { name, value } = event.target;
     let newValue = value;
@@ -105,7 +101,6 @@ export default class AuthForm extends React.Component {
             return;
           }
           handleSignIn(result);
-          window.location.hash = '#home';
         });
     }
   }
@@ -126,7 +121,7 @@ export default class AuthForm extends React.Component {
   }
 
   render() {
-    const { handleChange, handleSubmit, togglePassword } = this;
+    const { handleChange, handleSubmit, togglePassword, clearError } = this;
     const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort, invalidLogin } = this.state;
     const { path } = this.context.route;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
@@ -222,7 +217,7 @@ export default class AuthForm extends React.Component {
         <div className="row">
           <div className="col">
             <p className="font-14 text-center">
-              {switchText} <a href={anchorHref} className={anchorClass}>{anchorText}</a>
+              {switchText} <a href={anchorHref} className={anchorClass} onClick={clearError}>{anchorText}</a>
             </p>
           </div>
         </div>
