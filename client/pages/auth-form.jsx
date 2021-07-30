@@ -78,8 +78,9 @@ export default class AuthForm extends React.Component {
           if (!result) {
             return;
           }
+          window.location.hash = '#sign-in';
           usernameTaken = false;
-          this.setState({ username: '', password: '', usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
+          this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
         });
     } else if (path === 'sign-in') {
       const body = { username, password };
