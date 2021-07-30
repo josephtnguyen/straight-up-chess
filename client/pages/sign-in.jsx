@@ -30,19 +30,6 @@ export default class SignIn extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-
-    let invalidLogin = false;
-    if (username.length < 4) {
-      invalidLogin = true;
-    }
-    if (password.length < 6) {
-      invalidLogin = true;
-    }
-    if (invalidLogin) {
-      this.setState({ invalidLogin });
-      return;
-    }
-
     const { handleSignIn } = this.context;
     const body = { username, password };
     const req = {
