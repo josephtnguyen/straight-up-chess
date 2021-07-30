@@ -46,6 +46,8 @@ export default class App extends React.Component {
         return <Game />;
       case 'sign-up':
         return <AuthForm />;
+      case 'sign-in':
+        return <AuthForm />;
       default:
         window.location.hash = '#home';
     }

@@ -19,7 +19,8 @@ export default class Home extends React.Component {
         </div>
 
         <div className="row my-4">
-          <div className="col">
+          <div className="col d-flex">
+            <AuthRouteButton type="sign-in" />
             <AuthRouteButton type="sign-up" />
           </div>
         </div>
