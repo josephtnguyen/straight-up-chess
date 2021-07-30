@@ -55,7 +55,8 @@ export default class Game extends React.Component {
   }
 
   componentDidMount() {
-    const { params } = this.context;
+    const { route } = this.context;
+    const { params } = route;
     const gameId = params.get('gameId');
     const side = params.get('side');
     this.socket = io('/', { query: { gameId } });
