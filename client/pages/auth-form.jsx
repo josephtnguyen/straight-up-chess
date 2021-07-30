@@ -1,4 +1,5 @@
 import React from 'react';
+import RouteContext from '../lib/route-context';
 
 export default class AuthForm extends React.Component {
   constructor(props) {
@@ -78,17 +79,40 @@ export default class AuthForm extends React.Component {
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
     const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort } = this.state;
+    const { path } = this.context;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
+    let headingText, submitText, submitButtonClass, switchText, anchorText, anchorClass, anchorHref;
     let errorClass = 'auth-error-box';
     let errorMessage = '';
-    if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
-      errorClass += ' show';
-      if (usernameTooShort || usernameTooLong) {
-        errorMessage = 'Username must be 4-16 characters';
-      } else if (passwordTooShort) {
-        errorMessage = 'Password must be at least 6 characters';
-      } else if (usernameTaken) {
-        errorMessage = 'Username is already taken';
+    if (path === 'sign-up') {
+      headingText = 'SIGN UP';
+      submitText = 'Sign Up';
+      submitButtonClass = 'auth-submit-btn sign-up';
+      switchText = 'Already have an account?';
+      anchorText = 'LOG IN';
+      anchorClass = 'auth-switch-anchor sign-in';
+      anchorHref = '#sign-in';
+      if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
+        errorClass += ' show';
+        if (usernameTooShort || usernameTooLong) {
+          errorMessage = 'Username must be 4-16 characters';
+        } else if (passwordTooShort) {
+          errorMessage = 'Password must be at least 6 characters';
+        } else if (usernameTaken) {
+          errorMessage = 'Username is already taken';
+        }
+      }
+    } else if (path === 'sign-in') {
+      headingText = 'LOGIN';
+      submitText = 'Log In';
+      submitButtonClass = 'auth-submit-btn sign-in';
+      switchText = "Don't have an account?";
+      anchorText = 'SIGN UP';
+      anchorClass = 'auth-switch-anchor sign-up';
+      anchorHref = '#sign-up';
+      if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
+        errorClass += ' show';
+        errorMessage = 'Invalid login';
       }
     }
 
@@ -97,7 +121,7 @@ export default class AuthForm extends React.Component {
         <div className="row my-5">
           <div className="col text-center">
             <label htmlFor="username">
-              <h1 className="auth-title">SIGN UP</h1>
+              <h1 className="auth-title">{headingText}</h1>
             </label>
           </div>
         </div>
@@ -139,10 +163,20 @@ export default class AuthForm extends React.Component {
 
         <div className="row my-4">
           <div className="col p-0">
-            <button className="auth-submit-btn sign-up">Sign Up</button>
+            <button className={submitButtonClass}>{submitText}</button>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <p className="font-14 text-center">
+              {switchText} <a href={anchorHref} className={anchorClass}>{anchorText}</a>
+            </p>
           </div>
         </div>
       </form>
     );
   }
 }
+
+AuthForm.contextType = RouteContext;

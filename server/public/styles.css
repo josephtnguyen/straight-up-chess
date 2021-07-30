@@ -23,6 +23,10 @@ a:hover {
   color: #eaecee;
 }
 
+.font-14 {
+  font-size: 14px;
+}
+
 .font-24 {
   font-size: 24px;
 }
@@ -217,6 +221,37 @@ a:hover {
 
 .auth-submit-btn.sign-up:hover {
   background-color: #be8647;
+}
+
+.auth-submit-btn.sign-in {
+  background-color: #0173fac2;
+}
+
+.auth-submit-btn.sign-in:hover {
+  background-color: #0173fa;
+}
+
+.auth-switch-anchor {
+  display: inline;
+  font-weight: bold;
+}
+
+.auth-switch-anchor.sign-up {
+  color: #be8647c2;
+}
+
+.auth-switch-anchor.sign-up:hover {
+  color: #be8647;
+  text-decoration: underline;
+}
+
+.auth-switch-anchor.sign-in {
+  color: #0173fac2;
+}
+
+.auth-switch-anchor.sign-in:hover {
+  color: #0173fa;
+  text-decoration: underline;
 }
 
 .join-page {
