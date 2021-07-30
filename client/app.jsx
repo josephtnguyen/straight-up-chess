@@ -18,6 +18,7 @@ export default class App extends React.Component {
       user: { username: 'Anonymous' }
     };
     this.handleClickNav = this.handleClickNav.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 

@@ -11,7 +11,8 @@ export default class AuthForm extends React.Component {
       usernameTooShort: false,
       usernameTooLong: false,
       usernameTaken: false,
-      passwordTooShort: false
+      passwordTooShort: false,
+      invalidLogin: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,6 +43,8 @@ export default class AuthForm extends React.Component {
 
     let usernameTooShort = false;
     let passwordTooShort = false;
+    let usernameTaken = false;
+    let invalidLogin = false;
     if (username.length < 4) {
       usernameTooShort = true;
     }
@@ -49,7 +52,7 @@ export default class AuthForm extends React.Component {
       passwordTooShort = true;
     }
     if (usernameTooShort || passwordTooShort) {
-      this.setState({ usernameTooShort, passwordTooShort });
+      this.setState({ usernameTooShort, passwordTooShort, usernameTaken, invalidLogin });
       return;
     }
 
@@ -65,7 +68,8 @@ export default class AuthForm extends React.Component {
       fetch('/api/auth/sign-up', req)
         .then(res => {
           if (res.status === 204) {
-            this.setState({ usernameTooShort, usernameTaken: true, passwordTooShort });
+            usernameTaken = true;
+            this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
             return;
           }
           return res.json();
@@ -74,10 +78,34 @@ export default class AuthForm extends React.Component {
           if (!result) {
             return;
           }
-          this.setState({ username: '', password: '', usernameTooShort, usernameTaken: false, passwordTooShort });
+          usernameTaken = false;
+          this.setState({ username: '', password: '', usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
         });
     } else if (path === 'sign-in') {
-      this.setState({ usernameTooShort, usernameTaken: false, passwordTooShort });
+      const body = { username, password };
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      };
+      fetch('/api/auth/sign-in', req)
+        .then(res => {
+          if (res.status === 401) {
+            invalidLogin = true;
+            this.setState({ usernameTooShort, usernameTaken, invalidLogin, passwordTooShort });
+            return;
+          }
+          return res.json();
+        })
+        .then(result => {
+          if (!result) {
+            return;
+          }
+          handleSignIn(result);
+          window.location.hash = '#home';
+        });
     }
   }
 
@@ -98,7 +126,7 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { handleChange, handleSubmit, togglePassword } = this;
-    const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort } = this.state;
+    const { username, password, passwordType, usernameTooShort, usernameTooLong, usernameTaken, passwordTooShort, invalidLogin } = this.state;
     const { path } = this.context.route;
     const toggle = passwordType === 'password' ? 'images/eye-close.svg' : 'images/eye-open.svg';
     let headingText, submitText, submitButtonClass, switchText, anchorText, anchorClass, anchorHref;
@@ -130,7 +158,7 @@ export default class AuthForm extends React.Component {
       anchorText = 'SIGN UP';
       anchorClass = 'auth-switch-anchor sign-up';
       anchorHref = '#sign-up';
-      if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort) {
+      if (usernameTooShort || usernameTooLong || usernameTaken || passwordTooShort || invalidLogin) {
         errorClass += ' show';
         errorMessage = 'Invalid login';
         if (usernameTooLong) {
