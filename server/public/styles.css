@@ -541,6 +541,8 @@ a:hover {
   color: #32363c;
   z-index: 5;
   padding: 2rem 0.75rem;
+  position: absolute;
+  left: 0;
 }
 
 .dot {

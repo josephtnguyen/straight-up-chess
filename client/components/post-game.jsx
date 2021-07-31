@@ -40,7 +40,7 @@ export default class PostGame extends React.Component {
 
     const exitText = resolution === 'undecided' ? 'Leave' : 'Exit';
 
-    let postGameClass = 'post-game position-fixed page-height';
+    let postGameClass = 'post-game page-height';
     if (media === 'small') {
       postGameClass += ' w-100 d-block d-sm-none';
     } else if (media === 'large') {

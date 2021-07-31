@@ -273,7 +273,6 @@ export default class Local extends React.Component {
 
           <div className="w-100 row">
             <div className="col">
-
               <div className="board-container my-1" onClick={handleClick}>
                 <Banner message={'Check'} show={showCheck} />
                 <Banner message={'Checkmate'} show={showCheckmate} />
@@ -282,7 +281,7 @@ export default class Local extends React.Component {
               </div>
             </div>
 
-            <div className="col-auto w-375 d-none d-sm-block container">
+            <div className="col-auto w-375 d-none d-sm-block container position-relative">
               <LocalPostGame closePostGame={closePostGame} media="large" />
               <div className="row py-2">
                 <div className="col w-100">
