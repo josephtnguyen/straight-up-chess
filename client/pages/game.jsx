@@ -4,11 +4,11 @@ import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
 import Banner from '../components/banner';
 import PostGame from '../components/post-game';
-import Board from '../lib/board';
-import GameState from '../lib/gamestate';
 import GlobalContext from '../lib/global-context';
 import PostGameContext from '../lib/post-game-context';
 
+import Board from '../lib/board';
+import GameState from '../lib/gamestate';
 import copy from '../lib/copy';
 import isEmptyAt from '../lib/is-empty-at';
 import isViableMove from '../lib/is-viable-move';
