@@ -4,11 +4,11 @@ import ReactBoard from '../components/board';
 import PlayerPalette from '../components/player-palette';
 import Banner from '../components/banner';
 import PostGame from '../components/post-game';
-import Board from '../lib/board';
-import GameState from '../lib/gamestate';
 import GlobalContext from '../lib/global-context';
 import PostGameContext from '../lib/post-game-context';
 
+import Board from '../lib/board';
+import GameState from '../lib/gamestate';
 import copy from '../lib/copy';
 import isEmptyAt from '../lib/is-empty-at';
 import isViableMove from '../lib/is-viable-move';
@@ -512,7 +512,6 @@ export default class Game extends React.Component {
 
           <div className="w-100 row">
             <div className="col">
-
               <div className="board-container my-1" onClick={handleClick}>
                 <Banner message={'Check'} show={showCheck} />
                 <Banner message={'Checkmate'} show={showCheckmate} />
@@ -522,13 +521,17 @@ export default class Game extends React.Component {
               </div>
             </div>
 
-            <div className="col-auto d-none d-sm-block">
-                <PostGame closePostGame={closePostGame} media="large" />
-              <div className="w-100 p-2">
-                <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+            <div className="col-auto w-375 d-none d-sm-block container position-relative">
+              <PostGame closePostGame={closePostGame} media="large" />
+              <div className="row py-3">
+                <div className="col w-100">
+                  <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+                </div>
               </div>
-              <div className="w-100 p-2">
-                <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+              <div className="row py-3">
+                <div className="col w-100">
+                  <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+                </div>
               </div>
             </div>
           </div>

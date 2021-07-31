@@ -40,7 +40,7 @@ export default function PlayerPalette(props) {
     return <img key={index} src={`/images/${piece}.svg`} className="dead chess-piece m-1" />;
   });
   return (
-    <div className="player-palette container">
+    <div className="player-palette container px-3">
       <div className="row">
         <div className="col px-0">
           <div className="d-flex align-items-center">
