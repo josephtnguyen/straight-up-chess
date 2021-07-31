@@ -522,13 +522,17 @@ export default class Game extends React.Component {
               </div>
             </div>
 
-            <div className="col-auto d-none d-sm-block">
-                <PostGame closePostGame={closePostGame} media="large" />
-              <div className="w-100 p-2">
-                <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+            <div className="col-auto w-375 d-none d-sm-block container">
+              <PostGame closePostGame={closePostGame} media="large" />
+              <div className="row py-3">
+                <div className="col w-100">
+                  <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+                </div>
               </div>
-              <div className="w-100 p-2">
-                <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+              <div className="row py-3">
+                <div className="col w-100">
+                  <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+                </div>
               </div>
             </div>
           </div>

@@ -24,7 +24,7 @@ export default class LocalPostGame extends React.Component {
     if (media === 'small') {
       postGameClass += ' w-100 d-block d-sm-none';
     } else if (media === 'large') {
-      postGameClass += ' w-auto d-none d-sm-block';
+      postGameClass += ' w-375 d-none d-sm-block';
     }
     if (resolution === 'win') {
       if (gamestate.turn[0] === player.side[0]) {

@@ -282,13 +282,17 @@ export default class Local extends React.Component {
               </div>
             </div>
 
-            <div className="col-auto d-none d-sm-block">
+            <div className="col-auto w-375 d-none d-sm-block container">
               <LocalPostGame closePostGame={closePostGame} media="large" />
-              <div className="w-100 p-2">
-                <PlayerPalette player={opponent} promote={blackPromote} dead={blackDead} />
+              <div className="row py-2">
+                <div className="col w-100">
+                  <PlayerPalette player={opponent} promote={blackPromote} dead={blackDead} />
+                </div>
               </div>
-              <div className="w-100 p-2">
-                <PlayerPalette player={player} promote={whitePromote} dead={whiteDead} exitAction={openPostGame} />
+              <div className="row py-2">
+                <div className="col w-100">
+                  <PlayerPalette player={player} promote={whitePromote} dead={whiteDead} exitAction={openPostGame} />
+                </div>
               </div>
             </div>
           </div>

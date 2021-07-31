@@ -44,7 +44,7 @@ export default class PostGame extends React.Component {
     if (media === 'small') {
       postGameClass += ' w-100 d-block d-sm-none';
     } else if (media === 'large') {
-      postGameClass += ' w-auto d-none d-sm-block';
+      postGameClass += ' w-375 d-none d-sm-block';
     }
 
     return (

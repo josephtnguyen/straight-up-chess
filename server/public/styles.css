@@ -31,6 +31,10 @@ a:hover {
   font-size: 24px;
 }
 
+.w-375 {
+  width: 375px;
+}
+
 .page-height {
   height: calc(100vh - 66px);
 }
