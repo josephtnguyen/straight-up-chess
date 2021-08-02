@@ -13,8 +13,8 @@ export default function PlayerPalette(props) {
 
   if (props.promote) {
     const whiteChoices = ['wq', 'wb', 'wn', 'wr'];
-    const blackeChoices = ['bq', 'bb', 'bn', 'br'];
-    const choices = props.player.side === 'white' ? whiteChoices : blackeChoices;
+    const blackChoices = ['bq', 'bb', 'bn', 'br'];
+    const choices = props.player.side === 'white' ? blackChoices : whiteChoices;
     return (
       <div
       className="player-palette p-3">

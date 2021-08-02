@@ -268,7 +268,7 @@ export default class Local extends React.Component {
           <LocalPostGame closePostGame={this.closePostGame} media="small" />
 
           <div className="w-100 d-block d-sm-none p-2">
-            <PlayerPalette player={opponent} promote={blackPromote} dead={blackDead} />
+            <PlayerPalette player={opponent} promote={blackPromote} dead={whiteDead} />
           </div>
 
           <div className="w-100 row">
@@ -285,19 +285,19 @@ export default class Local extends React.Component {
               <LocalPostGame closePostGame={closePostGame} media="large" />
               <div className="row py-2">
                 <div className="col w-100">
-                  <PlayerPalette player={opponent} promote={blackPromote} dead={blackDead} />
+                  <PlayerPalette player={opponent} promote={blackPromote} dead={whiteDead} />
                 </div>
               </div>
               <div className="row py-2">
                 <div className="col w-100">
-                  <PlayerPalette player={player} promote={whitePromote} dead={whiteDead} exitAction={openPostGame} />
+                  <PlayerPalette player={player} promote={whitePromote} dead={blackDead} exitAction={openPostGame} />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="w-100 d-block d-sm-none p-2">
-            <PlayerPalette player={player} promote={whitePromote} dead={whiteDead} exitAction={openPostGame} />
+            <PlayerPalette player={player} promote={whitePromote} dead={blackDead} exitAction={openPostGame} />
           </div>
         </div>
       </PostGameContext.Provider>

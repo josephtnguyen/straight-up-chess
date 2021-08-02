@@ -507,7 +507,7 @@ export default class Game extends React.Component {
             <PostGame closePostGame={this.closePostGame} media="small" />
 
           <div className="w-100 d-block d-sm-none p-2">
-            <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+            <PlayerPalette player={opponent} dead={playerDead} cancelAction={cancelGame} />
           </div>
 
           <div className="w-100 row">
@@ -525,19 +525,19 @@ export default class Game extends React.Component {
               <PostGame closePostGame={closePostGame} media="large" />
               <div className="row py-3">
                 <div className="col w-100">
-                  <PlayerPalette player={opponent} dead={opponentDead} cancelAction={cancelGame} />
+                  <PlayerPalette player={opponent} dead={playerDead} cancelAction={cancelGame} />
                 </div>
               </div>
               <div className="row py-3">
                 <div className="col w-100">
-                  <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+                  <PlayerPalette player={player} promote={promoteFunc} dead={opponentDead} exitAction={openPostGame} />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="w-100 d-block d-sm-none p-2">
-            <PlayerPalette player={player} promote={promoteFunc} dead={playerDead} exitAction={openPostGame} />
+            <PlayerPalette player={player} promote={promoteFunc} dead={opponentDead} exitAction={openPostGame} />
           </div>
         </div>
       </PostGameContext.Provider>
