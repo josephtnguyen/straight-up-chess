@@ -160,7 +160,7 @@ app.post('/api/games', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const [meta] = result.rows;
-      io.to('lobby').emit('game posted', meta);
+      io.to('lobby').emit('add post', meta);
       res.status(201).json(meta);
     })
     .catch(err => next(err));

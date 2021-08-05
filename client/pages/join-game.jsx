@@ -21,7 +21,7 @@ export default class JoinGame extends React.Component {
       this.setState({ posts });
     });
 
-    socket.on('game posted', meta => {
+    socket.on('add post', meta => {
       const { posts } = this.state;
       posts.unshift(meta);
       this.setState({ posts });
