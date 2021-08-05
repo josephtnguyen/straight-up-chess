@@ -292,6 +292,11 @@ a:hover {
   overflow-y: scroll;
 }
 
+.no-games {
+  text-align: center;
+  color: #b5b5b5;
+}
+
 .post {
   background-color: #4e545e;
   color: #eaecee;

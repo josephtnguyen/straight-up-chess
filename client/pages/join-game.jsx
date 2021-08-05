@@ -7,7 +7,8 @@ export default class JoinGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: []
+      posts: [],
+      loadingGames: true
     };
     this.loadGames = this.loadGames.bind(this);
   }
@@ -36,11 +37,19 @@ export default class JoinGame extends React.Component {
   loadGames() {
     fetch('/api/games')
       .then(res => res.json())
-      .then(result => this.setState({ posts: result }));
+      .then(result => this.setState({ posts: result, loadingGames: false }));
   }
 
   render() {
-    const posts = this.state.posts.map(post => <Post key={post.gameId} meta={post} />);
+    const { posts, loadingGames } = this.state;
+    if (loadingGames) {
+      return null;
+    }
+    let noGames = <div className="no-games py-4">There are no games posted...</div>;
+    if (posts.length !== 0) {
+      noGames = null;
+    }
+    const reactPosts = posts.map(post => <Post key={post.gameId} meta={post} />);
     return (
       <div className="join-page container page-height w-100">
         <div className="row">
@@ -52,7 +61,8 @@ export default class JoinGame extends React.Component {
         <div className="row">
           <div className="col">
             <div className="scroller px-1 py-2">
-              {posts}
+              {noGames}
+              {reactPosts}
             </div>
           </div>
         </div>
