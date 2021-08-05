@@ -68,7 +68,7 @@ io.on('connection', socket => {
           db.query(sql, params)
             .then(result => {
               payload.moves = result.rows;
-              io.to('lobby').emit('game joined', meta);
+              io.to('lobby').emit('remove post', meta);
               io.to(gameId).emit('room joined', payload);
             })
             .catch(err => console.error(err));
@@ -337,7 +337,9 @@ app.delete('/api/games/:gameId', (req, res, next) => {
       if (result.rows.length === 0) {
         throw new ClientError(404, 'no such gameId exists');
       }
-      res.json(result.rows[0]);
+      const [meta] = result.rows;
+      io.to('lobby').emit('remove post', meta);
+      res.json(meta);
     })
     .catch(err => next(err));
 });

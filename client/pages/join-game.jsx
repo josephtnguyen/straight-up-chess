@@ -16,7 +16,7 @@ export default class JoinGame extends React.Component {
   componentDidMount() {
     this.socket = io();
     const { socket } = this;
-    socket.on('game joined', removed => {
+    socket.on('remove post', removed => {
       const posts = this.state.posts.filter(post => post.gameId !== removed.gameId);
       this.setState({ posts });
     });
