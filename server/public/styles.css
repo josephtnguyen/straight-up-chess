@@ -4,6 +4,7 @@
 
 body {
   background-color: #eaecee;
+  margin-top: 66px;
 }
 
 a {
@@ -46,6 +47,12 @@ a:hover {
 .header {
   background-color: #32363c;
   height: 66px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 6;
 }
 
 .hamburger-menu-btn {
@@ -71,7 +78,8 @@ a:hover {
   background-color: rgba(40, 40, 40, 0);
   pointer-events: none;
   transition: background-color 0.25s ease;
-  z-index: 1;
+  position: fixed;
+  z-index: 6;
 }
 
 .nav-background.show {
@@ -85,7 +93,8 @@ a:hover {
   width: 375px;
   left: -375px;
   transition: left 0.25s ease;
-  z-index: 2;
+  position: fixed;
+  z-index: 7;
 }
 
 .nav.show {
@@ -290,6 +299,11 @@ a:hover {
   border-radius: 5px;
   height: calc(100vh - 166px);
   overflow-y: scroll;
+}
+
+.no-games {
+  text-align: center;
+  color: #b5b5b5;
 }
 
 .post {
@@ -541,6 +555,14 @@ a:hover {
   color: #32363c;
   z-index: 5;
   padding: 2rem 0.75rem;
+}
+
+.post-game.small {
+  position: fixed;
+  top: 66px;
+}
+
+.post-game.large {
   position: absolute;
   left: 0;
 }

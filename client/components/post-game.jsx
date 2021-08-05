@@ -42,9 +42,9 @@ export default class PostGame extends React.Component {
 
     let postGameClass = 'post-game page-height';
     if (media === 'small') {
-      postGameClass += ' w-100 d-block d-sm-none';
+      postGameClass += ' small w-100 d-block d-sm-none';
     } else if (media === 'large') {
-      postGameClass += ' w-375 d-none d-sm-block';
+      postGameClass += ' large w-375 d-none d-sm-block';
     }
 
     return (

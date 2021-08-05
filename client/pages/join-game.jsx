@@ -7,7 +7,8 @@ export default class JoinGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: []
+      posts: [],
+      loadingGames: true
     };
     this.loadGames = this.loadGames.bind(this);
   }
@@ -15,15 +16,23 @@ export default class JoinGame extends React.Component {
   componentDidMount() {
     this.socket = io();
     const { socket } = this;
-    socket.on('game joined', removed => {
+    socket.on('remove post', removed => {
       const posts = this.state.posts.filter(post => post.gameId !== removed.gameId);
       this.setState({ posts });
     });
+
+    socket.on('add post', meta => {
+      const { posts } = this.state;
+      posts.unshift(meta);
+      this.setState({ posts });
+    });
+
     socket.on('disconnect', reason => {
       if (reason === 'io server disconnect') {
         console.error({ error: 'an unexpected error occurred' });
       }
     });
+
     socket.emit('join lobby');
 
     this.loadGames();
@@ -36,11 +45,21 @@ export default class JoinGame extends React.Component {
   loadGames() {
     fetch('/api/games')
       .then(res => res.json())
-      .then(result => this.setState({ posts: result }));
+      .then(result => this.setState({ posts: result, loadingGames: false }));
   }
 
   render() {
-    const posts = this.state.posts.map(post => <Post key={post.gameId} meta={post} />);
+    if (this.state.loadingGames) {
+      return null;
+    }
+
+    const { posts } = this.state;
+    const reactPosts = posts.map(post => <Post key={post.gameId} meta={post} />);
+    let noGames = <div className="no-games py-4">There are no games posted...</div>;
+    if (posts.length !== 0) {
+      noGames = null;
+    }
+
     return (
       <div className="join-page container page-height w-100">
         <div className="row">
@@ -52,7 +71,8 @@ export default class JoinGame extends React.Component {
         <div className="row">
           <div className="col">
             <div className="scroller px-1 py-2">
-              {posts}
+              {noGames}
+              {reactPosts}
             </div>
           </div>
         </div>
