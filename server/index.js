@@ -53,8 +53,6 @@ io.on('connection', socket => {
     db.query(sql, params)
       .then(result => {
         const meta = result.rows[0];
-        io.to('lobby').emit('game joined', meta);
-
         const payload = {};
         payload.meta = meta;
         if (!meta.opponentName) {
@@ -70,6 +68,7 @@ io.on('connection', socket => {
           db.query(sql, params)
             .then(result => {
               payload.moves = result.rows;
+              io.to('lobby').emit('game joined', meta);
               io.to(gameId).emit('room joined', payload);
             })
             .catch(err => console.error(err));
@@ -160,7 +159,9 @@ app.post('/api/games', (req, res, next) => {
   const params = [message, playerName, playerSide, opponentSide];
   db.query(sql, params)
     .then(result => {
-      res.status(201).json(result.rows[0]);
+      const [meta] = result.rows;
+      io.to('lobby').emit('game posted', meta);
+      res.status(201).json(meta);
     })
     .catch(err => next(err));
 });

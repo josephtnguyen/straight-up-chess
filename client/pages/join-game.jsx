@@ -20,11 +20,19 @@ export default class JoinGame extends React.Component {
       const posts = this.state.posts.filter(post => post.gameId !== removed.gameId);
       this.setState({ posts });
     });
+
+    socket.on('game posted', meta => {
+      const { posts } = this.state;
+      posts.unshift(meta);
+      this.setState({ posts });
+    });
+
     socket.on('disconnect', reason => {
       if (reason === 'io server disconnect') {
         console.error({ error: 'an unexpected error occurred' });
       }
     });
+
     socket.emit('join lobby');
 
     this.loadGames();
@@ -41,15 +49,17 @@ export default class JoinGame extends React.Component {
   }
 
   render() {
-    const { posts, loadingGames } = this.state;
-    if (loadingGames) {
+    if (this.state.loadingGames) {
       return null;
     }
+
+    const { posts } = this.state;
+    const reactPosts = posts.map(post => <Post key={post.gameId} meta={post} />);
     let noGames = <div className="no-games py-4">There are no games posted...</div>;
     if (posts.length !== 0) {
       noGames = null;
     }
-    const reactPosts = posts.map(post => <Post key={post.gameId} meta={post} />);
+
     return (
       <div className="join-page container page-height w-100">
         <div className="row">
