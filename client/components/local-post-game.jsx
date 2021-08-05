@@ -22,9 +22,9 @@ export default class LocalPostGame extends React.Component {
     let postGameClass = 'post-game page-height';
     let winner = 'Player 1';
     if (media === 'small') {
-      postGameClass += ' w-100 d-block d-sm-none';
+      postGameClass += ' small w-100 d-block d-sm-none';
     } else if (media === 'large') {
-      postGameClass += ' w-375 d-none d-sm-block';
+      postGameClass += ' large w-375 d-none d-sm-block';
     }
     if (resolution === 'win') {
       if (gamestate.turn[0] === player.side[0]) {

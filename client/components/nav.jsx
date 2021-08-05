@@ -27,8 +27,8 @@ export default class Nav extends React.Component {
       }
     ];
     const links = user.userId ? loggedInLinks : loggedOutLinks;
-    const navBackgroundClass = 'nav-background position-absolute page-height' + (navOpen ? ' show' : '');
-    const navClass = 'nav position-absolute flex-column page-height' + (navOpen ? ' show' : '');
+    const navBackgroundClass = 'nav-background page-height' + (navOpen ? ' show' : '');
+    const navClass = 'nav flex-column page-height' + (navOpen ? ' show' : '');
 
     return (
       <>
