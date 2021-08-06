@@ -1,3 +1,3 @@
-# final-project
+# Straight Up Chess
 
-A full stack JavaScript solo project.
+A  full-stack chess application that allows the user to play chess online against other users.
