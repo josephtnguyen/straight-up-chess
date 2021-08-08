@@ -6,7 +6,7 @@ A  full-stack [chess application](https://straight-up-chess.herokuapp.com/) that
 
 ## Motivation
 
-Since I first learned how to code, I had a stronger grasp on how other developers could put together a game.  Writing the logic behind a game of chess seemed within reach, albeit a daunting task.  And after learning how to implement a Node.js server and PostgreSQL database, I could see how everything could come together for a full-stack project.  So I decided I would make a chess application for my first full-stack project.  Furthermore, it gave me the opportunity to expand my toolkit by learning Bootstrap and Socket.IO; Bootstrap in general since I've seen it talked about as a reliable library, and Socket.IO specifically to implement real-time communication between clients.
+Since I first learned how to code, I had a stronger grasp on how other developers could put together a game.  Writing the logic behind a game of chess seemed within reach, albeit a daunting task.  And after learning how to implement a Node.js server and PostgreSQL database, I could see how everything could come together for a full-stack project.  So I decided I would make a chess application for my first full-stack project.  Furthermore, it gave me the opportunity to expand my toolkit by learning Bootstrap and Socket.IO; Bootstrap in general since I've seen it talked about as a reliable library, and Socket.IO specifically to implement real-time communication between client and server.
 
 ## Technologies
 
@@ -24,7 +24,7 @@ Since I first learned how to code, I had a stronger grasp on how other developer
 
 #### Database
 
-* Used a PostrgreSQL database to store users, games, and moves from each game
+* Used a PostgreSQL database to store users, games, and moves from each game
 
 ## Features
 
