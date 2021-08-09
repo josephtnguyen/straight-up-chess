@@ -317,6 +317,16 @@ export default class Game extends React.Component {
       killed = board[end].player + board[end].piece;
     } else if (board[start].piece === 'p') {
       gamestate.pawnOrKillCounter = 0;
+      // add en passant kills
+      if (board[start].player === 'w' && gamestate.enPassantBlack) {
+        if (end === gamestate.enPassantBlack - 10) {
+          killed = 'bp';
+        }
+      } else if (board[start].player === 'b' && gamestate.enPassantWhite) {
+        if (end === gamestate.enPassantWhite + 10) {
+          killed = 'wp';
+        }
+      }
     } else {
       gamestate.pawnOrKillCounter++;
     }
