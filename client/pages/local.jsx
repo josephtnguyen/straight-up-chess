@@ -224,6 +224,16 @@ export default class Local extends React.Component {
     window.localStorage.removeItem('start');
     nextBoard[end].piece = event.target.id;
     nextGamestate.promoting = 0;
+
+    // apply scans
+    changeTurn(nextGamestate);
+    pawnScan(nextBoard, nextGamestate);
+    checkScan(nextBoard, nextGamestate);
+    checkmateScan(nextBoard, nextGamestate);
+    drawScan(nextBoard, nextGamestate);
+    castleScan(nextBoard, nextGamestate);
+    changeTurn(nextGamestate);
+
     this.setState({
       board: nextBoard,
       gamestate: nextGamestate
