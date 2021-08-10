@@ -188,11 +188,11 @@ export default class Local extends React.Component {
 
   resolveTurn(nextGamestate, start, end) {
     let phase = 'selecting';
-
-    // display banners when applicable
     let showCheck = 0;
     let showCheckmate = 0;
     let showDraw = 0;
+
+    // display banners when applicable
     if (nextGamestate.check.wb || nextGamestate.check.bw) {
       showCheck = setTimeout(this.removeBanner, 2000);
     }
