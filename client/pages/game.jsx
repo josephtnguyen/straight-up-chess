@@ -441,7 +441,7 @@ export default class Game extends React.Component {
     nextGamestate.promoting = 0;
 
     // apply scans
-    changeTurn(nextGamestate);
+    changeTurn(nextGamestate, true);
     pawnScan(nextBoard, nextGamestate);
     checkScan(nextBoard, nextGamestate);
     checkmateScan(nextBoard, nextGamestate);
