@@ -149,6 +149,16 @@ export default class Local extends React.Component {
       killed = board[end].player + board[end].piece;
     } else if (board[start].piece === 'p') {
       gamestate.pawnOrKillCounter = 0;
+      // add en passant kills
+      if (board[start].player === 'w' && gamestate.enPassantBlack) {
+        if (end === gamestate.enPassantBlack - 10) {
+          killed = 'bp';
+        }
+      } else if (board[start].player === 'b' && gamestate.enPassantWhite) {
+        if (end === gamestate.enPassantWhite + 10) {
+          killed = 'wp';
+        }
+      }
     } else {
       gamestate.pawnOrKillCounter++;
     }
@@ -178,11 +188,11 @@ export default class Local extends React.Component {
 
   resolveTurn(nextGamestate, start, end) {
     let phase = 'selecting';
-
-    // display banners when applicable
     let showCheck = 0;
     let showCheckmate = 0;
     let showDraw = 0;
+
+    // display banners when applicable
     if (nextGamestate.check.wb || nextGamestate.check.bw) {
       showCheck = setTimeout(this.removeBanner, 2000);
     }
@@ -214,6 +224,16 @@ export default class Local extends React.Component {
     window.localStorage.removeItem('start');
     nextBoard[end].piece = event.target.id;
     nextGamestate.promoting = 0;
+
+    // apply scans
+    changeTurn(nextGamestate, true);
+    pawnScan(nextBoard, nextGamestate);
+    checkScan(nextBoard, nextGamestate);
+    checkmateScan(nextBoard, nextGamestate);
+    drawScan(nextBoard, nextGamestate);
+    castleScan(nextBoard, nextGamestate);
+    changeTurn(nextGamestate);
+
     this.setState({
       board: nextBoard,
       gamestate: nextGamestate

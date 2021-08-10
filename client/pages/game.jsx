@@ -136,6 +136,10 @@ export default class Game extends React.Component {
       const killed = this.executeMove(nextBoard, nextGamestate, start, end);
       const nextWhiteDead = whiteDead;
       const nextBlackDead = blackDead;
+      let phase = 'selecting';
+      let showCheck = 0;
+      let showCheckmate = 0;
+      let showDraw = 0;
       // add dead pieces to player palette
       if (killed) {
         if (killed[0] === 'w') {
@@ -144,11 +148,20 @@ export default class Game extends React.Component {
           nextBlackDead.push(killed);
         }
       }
-      let phase = 'selecting';
+      // promote any pawns
+      if (promotion) {
+        nextBoard[end].piece = promotion;
+        nextGamestate.promoting = null;
+        // apply scans
+        changeTurn(nextGamestate, true);
+        pawnScan(nextBoard, nextGamestate);
+        checkScan(nextBoard, nextGamestate);
+        checkmateScan(nextBoard, nextGamestate);
+        drawScan(nextBoard, nextGamestate);
+        castleScan(nextBoard, nextGamestate);
+        changeTurn(nextGamestate);
+      }
       // display banners when applicable
-      let showCheck = 0;
-      let showCheckmate = 0;
-      let showDraw = 0;
       if (nextGamestate.check.wb || nextGamestate.check.bw) {
         showCheck = setTimeout(this.removeBanner, 2000);
       }
@@ -159,11 +172,6 @@ export default class Game extends React.Component {
       if (nextGamestate.draw) {
         showDraw = setTimeout(this.removeBanner, 2000);
         phase = 'done';
-      }
-      // promote any pawns
-      if (promotion) {
-        nextBoard[end].piece = promotion;
-        nextGamestate.promoting = null;
       }
       this.setState({
         board: nextBoard,
@@ -317,6 +325,16 @@ export default class Game extends React.Component {
       killed = board[end].player + board[end].piece;
     } else if (board[start].piece === 'p') {
       gamestate.pawnOrKillCounter = 0;
+      // add en passant kills
+      if (board[start].player === 'w' && gamestate.enPassantBlack) {
+        if (end === gamestate.enPassantBlack - 10) {
+          killed = 'bp';
+        }
+      } else if (board[start].player === 'b' && gamestate.enPassantWhite) {
+        if (end === gamestate.enPassantWhite + 10) {
+          killed = 'wp';
+        }
+      }
     } else {
       gamestate.pawnOrKillCounter++;
     }
@@ -421,6 +439,16 @@ export default class Game extends React.Component {
     window.localStorage.removeItem('start');
     nextBoard[end].piece = event.target.id;
     nextGamestate.promoting = 0;
+
+    // apply scans
+    changeTurn(nextGamestate, true);
+    pawnScan(nextBoard, nextGamestate);
+    checkScan(nextBoard, nextGamestate);
+    checkmateScan(nextBoard, nextGamestate);
+    drawScan(nextBoard, nextGamestate);
+    castleScan(nextBoard, nextGamestate);
+    changeTurn(nextGamestate);
+
     this.setState({
       board: nextBoard,
       gamestate: nextGamestate,
