@@ -4,7 +4,7 @@ const coords = new Coords();
 
 export default class Board {
   constructor() {
-    let pieceId = 1;
+    let pieceId = 0;
     // add pieces to board
     for (const coord of coords) {
       this[coord] = {
