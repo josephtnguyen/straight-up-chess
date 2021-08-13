@@ -2,7 +2,7 @@
 
 A  full-stack [chess application](https://straight-up-chess.herokuapp.com/) that allows the user to play chess online against other users.
 
-![chess](https://user-images.githubusercontent.com/59109937/128582843-1649b9e3-4d5e-440e-8762-ccc6a209c7cf.gif)
+![chess](https://user-images.githubusercontent.com/59109937/129427782-9ac22c73-5768-46bc-a821-a0f68ae551c9.gif)
 
 ## Motivation
 
