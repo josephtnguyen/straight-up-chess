@@ -193,7 +193,7 @@ export default class Local extends React.Component {
     let showDraw = 0;
 
     // display banners when applicable
-    if (nextGamestate.check.wb || nextGamestate.check.bw) {
+    if (!nextGamestate.checkmate && (nextGamestate.check.wb || nextGamestate.check.bw)) {
       showCheck = setTimeout(this.removeBanner, 2000);
     }
     if (nextGamestate.checkmate) {

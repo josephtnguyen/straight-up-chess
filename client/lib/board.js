@@ -4,12 +4,15 @@ const coords = new Coords();
 
 export default class Board {
   constructor() {
+    let pieceId = 0;
     // add pieces to board
     for (const coord of coords) {
       this[coord] = {
         piece: null,
-        player: null
+        player: null,
+        pieceId
       };
+      pieceId++;
 
       if ((coord > 20 && coord < 29) || (coord > 70 && coord < 79)) {
         this[coord].piece = 'p';
@@ -24,7 +27,8 @@ export default class Board {
       } else if (coord === 15 || coord === 85) {
         this[coord].piece = 'k';
       } else {
-        this[coord].piece = null;
+        this[coord].pieceId = null;
+        pieceId--;
       }
 
       // assign color to pieces

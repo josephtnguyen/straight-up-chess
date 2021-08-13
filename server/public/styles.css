@@ -521,9 +521,13 @@ a:hover {
   background-color: #e7d0a7;
 }
 
-.chess-piece {
-  height: 60%;
-  width: 60%;
+.chess-piece.playing {
+  width: calc(100% / 8);
+  height: calc(100% / 8);
+  padding: calc(100% / 8 * 0.2);
+  pointer-events: none;
+  position: absolute;
+  transition: all 0.25s ease-in-out;
 }
 
 .dead.chess-piece {
