@@ -15,6 +15,18 @@ export default function Board(props) {
     }
   }
 
+  // add pieces
+  const pieces = [];
+  for (const coord of coords) {
+    if (board[coord].piece) {
+      pieces.push({ coord, piece: board[coord].player + board[coord].piece });
+    }
+  }
+  const renderedPieces = pieces.map(piece => {
+    const src = `/images/${piece.piece}.svg`;
+    return (<img key={piece.coord} src={src} className="new-chess-piece" />);
+  });
+
   const tiles = rows.map((row, index) => {
     const rowClass = side === 'white'
       ? 'board-row d-flex'
@@ -22,20 +34,20 @@ export default function Board(props) {
     return (
       <div key={index} className={rowClass}>
         {row.map(coord => {
-          const tile = board[coord];
-          let piece;
-          if (tile.piece) {
-            const { player: side, piece: type } = tile;
-            const src = `/images/${side + type}.svg`;
-            piece = <img src={src} className="chess-piece" />;
-          }
+          // const tile = board[coord];
+          // let piece;
+          // if (tile.piece) {
+          //   const { player: side, piece: type } = tile;
+          //   const src = `/images/${side + type}.svg`;
+          //   piece = <img src={src} className="chess-piece" />;
+          // }
 
           const highlight = highlighted.includes(coord) ? ' highlighted' : '';
           const select = selected === coord ? ' selected' : '';
           const tileClass = 'tile' + highlight + select;
           return (
             <div key={coord} className={tileClass} id={coord}>
-              {piece}
+              {/* {piece} */}
             </div>
           );
         })}
@@ -47,8 +59,12 @@ export default function Board(props) {
     ? 'board d-flex flex-column-reverse'
     : 'board d-flex flex-column';
   return (
-    <div className={boardClass}>
-      {tiles}
-    </div>
+    <>
+      <div className={boardClass}>
+        {tiles}
+      </div>
+      {/* <img src={'/images/wp.svg'} className="new-chess-piece" />; */}
+      {renderedPieces}
+    </>
   );
 }
