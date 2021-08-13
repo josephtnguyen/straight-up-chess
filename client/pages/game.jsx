@@ -162,7 +162,7 @@ export default class Game extends React.Component {
         changeTurn(nextGamestate);
       }
       // display banners when applicable
-      if (nextGamestate.check.wb || nextGamestate.check.bw) {
+      if (!nextGamestate.checkmate && (nextGamestate.check.wb || nextGamestate.check.bw)) {
         showCheck = setTimeout(this.removeBanner, 2000);
       }
       if (nextGamestate.checkmate) {
@@ -370,7 +370,7 @@ export default class Game extends React.Component {
     let showCheck = 0;
     let showCheckmate = 0;
     let showDraw = 0;
-    if (nextGamestate.check.wb || nextGamestate.check.bw) {
+    if (!nextGamestate.checkmate && (nextGamestate.check.wb || nextGamestate.check.bw)) {
       showCheck = setTimeout(this.removeBanner, 2000);
     }
     if (nextGamestate.checkmate) {
