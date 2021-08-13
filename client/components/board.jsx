@@ -24,7 +24,9 @@ export default function Board(props) {
   }
   const renderedPieces = pieces.map(piece => {
     const src = `/images/${piece.piece}.svg`;
-    return (<img key={piece.coord} src={src} className="new-chess-piece" />);
+    const [row, col] = piece.coord.toString();
+    const pieceClass = `new-chess-piece board-row-${row} board-col-${col}`;
+    return (<img key={piece.coord} src={src} className={pieceClass} />);
   });
 
   const tiles = rows.map((row, index) => {
@@ -63,7 +65,7 @@ export default function Board(props) {
       <div className={boardClass}>
         {tiles}
       </div>
-      {/* <img src={'/images/wp.svg'} className="new-chess-piece" />; */}
+      {/* <img src={'/images/wp.svg'} className="new-chess-piece board-row-1 board-col-8" /> */}
       {renderedPieces}
     </>
   );
