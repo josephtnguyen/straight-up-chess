@@ -19,18 +19,22 @@ export default function Board(props) {
   const pieces = [];
   for (const coord of coords) {
     if (board[coord].piece) {
-      pieces.push({ coord, piece: board[coord].player + board[coord].piece });
+      pieces.push({
+        coord,
+        description: board[coord].player + board[coord].piece,
+        pieceId: board[coord].pieceId
+      });
     }
   }
   const renderedPieces = pieces.map(piece => {
-    const src = `/images/${piece.piece}.svg`;
+    const src = `/images/${piece.description}.svg`;
     let [row, col] = piece.coord.toString();
     if (side === 'black') {
       row = 9 - row;
       col = 9 - col;
     }
     const pieceClass = `new-chess-piece board-row-${row} board-col-${col}`;
-    return (<img key={piece.coord} src={src} className={pieceClass} />);
+    return (<img key={piece.pieceId} id={piece.pieceId} src={src} className={pieceClass} />);
   });
 
   const tiles = rows.map((row, index) => {
@@ -69,7 +73,7 @@ export default function Board(props) {
       <div className={boardClass}>
         {tiles}
       </div>
-      {/* <img src={'/images/wp.svg'} className="new-chess-piece board-row-1 board-col-8" /> */}
+      {/* <img src={'/images/wp.svg'} className="new-chess-piece board-row-3 board-col-8" /> */}
       {renderedPieces}
     </>
   );
