@@ -24,7 +24,11 @@ export default function Board(props) {
   }
   const renderedPieces = pieces.map(piece => {
     const src = `/images/${piece.piece}.svg`;
-    const [row, col] = piece.coord.toString();
+    let [row, col] = piece.coord.toString();
+    if (side === 'black') {
+      row = 9 - row;
+      col = 9 - col;
+    }
     const pieceClass = `new-chess-piece board-row-${row} board-col-${col}`;
     return (<img key={piece.coord} src={src} className={pieceClass} />);
   });
