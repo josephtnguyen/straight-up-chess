@@ -33,8 +33,8 @@ export default function Board(props) {
       row = 9 - row;
       col = 9 - col;
     }
-    const pieceClass = `new-chess-piece board-row-${row} board-col-${col}`;
-    return (<img key={piece.pieceId} id={piece.pieceId} src={src} className={pieceClass} />);
+    const pieceClass = `chess-piece playing board-row-${row} board-col-${col}`;
+    return (<img key={piece.pieceId} src={src} className={pieceClass} />);
   });
 
   const tiles = rows.map((row, index) => {
@@ -44,21 +44,11 @@ export default function Board(props) {
     return (
       <div key={index} className={rowClass}>
         {row.map(coord => {
-          // const tile = board[coord];
-          // let piece;
-          // if (tile.piece) {
-          //   const { player: side, piece: type } = tile;
-          //   const src = `/images/${side + type}.svg`;
-          //   piece = <img src={src} className="chess-piece" />;
-          // }
-
           const highlight = highlighted.includes(coord) ? ' highlighted' : '';
           const select = selected === coord ? ' selected' : '';
           const tileClass = 'tile' + highlight + select;
           return (
-            <div key={coord} className={tileClass} id={coord}>
-              {/* {piece} */}
-            </div>
+            <div key={coord} className={tileClass} id={coord} />
           );
         })}
       </div>
@@ -73,7 +63,6 @@ export default function Board(props) {
       <div className={boardClass}>
         {tiles}
       </div>
-      {/* <img src={'/images/wp.svg'} className="new-chess-piece board-row-3 board-col-8" /> */}
       {renderedPieces}
     </>
   );

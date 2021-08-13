@@ -521,12 +521,7 @@ a:hover {
   background-color: #e7d0a7;
 }
 
-.chess-piece {
-  height: 60%;
-  width: 60%;
-}
-
-.new-chess-piece {
+.chess-piece.playing {
   width: calc(100% / 8);
   height: calc(100% / 8);
   padding: calc(100% / 8 * 0.2);
