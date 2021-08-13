@@ -34,23 +34,7 @@ export default function Board(props) {
     );
   });
 
-  // add pieces
-  // const pieces = [];
-  // for (const coord of coords) {
-  //   if (board[coord].piece) {
-  //     const piece = board[coord];
-  //     const description = piece.player + piece.piece;
-  //     const pieceId = piece.pieceId;
-  //     const src = `/images/${description}.svg`;
-  //     let [row, col] = coord.toString();
-  //     if (side === 'black') {
-  //       row = 9 - row;
-  //       col = 9 - col;
-  //     }
-  //     const pieceClass = `chess-piece playing board-row-${row} board-col-${col}`;
-  //     pieces.push(<img key={pieceId} src={src} className={pieceClass} />);
-  //   }
-  // }
+  // modify piece src and class
   const srcs = [];
   const pieceClasses = [];
   for (const coord of coords) {
