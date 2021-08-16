@@ -54,11 +54,14 @@ Since I first learned how to code, I had a stronger grasp on how other developer
 3. Open the terminal to the straight-up-chess repository.
 4. Run the command `npm install` to download the necessary npm packages.
 5. Run the command `cp .env.example .env` to create a `.env` file for the application.
-6. In the `.env` file, Change the `TOKEN_SECRET` and `DATABASE_URL` at `changeMe` to suitable values.
-7. Run the command `npm run import:db` to instantiate the database.
-8. Run the command `npm run dev` to start the server and run the client as a live server.
-9. View the client in the browser at `localport:3000`.
-10. To view the database on pgweb, open another terminal and run the command `pgweb --db=<insert DATABASE_URL's changeMe from .env>`; then, open the browser to `localhost:8081`.
+6. In the `.env` file, change the `TOKEN_SECRET` to a suitable value.
+7. In the `.env` file, change the `DATABASE_URL` at `changeMe` to `straightUpChess`.
+8. Run the command `sudo service postgresql status` to see if postgresql is running.
+9. If postgresql is not running, run the command `sudo service postgresql start`.
+10. Run the command `npm run import:db` to instantiate the database.
+11. Run the command `npm run dev` to start the server and run the client as a live server.
+12. View the client in the browser at `localport:3000`.
+13. To view the database on pgweb, open another terminal and run the command `pgweb --db=<insert DATABASE_URL's changeMe from .env>`; then, open the browser to `localhost:8081`.
 
 ## Live
 
