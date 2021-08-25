@@ -58,10 +58,11 @@ Since I first learned how to code, I had a stronger grasp on how other developer
 7. In the `.env` file, change the `DATABASE_URL` at `changeMe` to `straightUpChess`.
 8. Run the command `sudo service postgresql status` to see if postgresql is running.
 9. If postgresql is not running, run the command `sudo service postgresql start`.
-10. Run the command `npm run db:import` to instantiate the database.
-11. Run the command `npm run dev` to start the server and run the client as a live server.
-12. View the client in the browser at `localport:3000`.
-13. To view the database on pgweb, open another terminal and run the command `pgweb --db=<insert DATABASE_URL's changeMe from .env>`; then, open the browser to `localhost:8081`.
+10. Run the command `createdb straightUpChess` to instantiate the database.
+11. Run the command `npm run db:import` to import the schema and initial data.
+12. Run the command `npm run dev` to start the server and run the client as a live server.
+13. View the client in the browser at `localport:3000`.
+14. To view the database on pgweb, open another terminal and run the command `pgweb --db=<insert DATABASE_URL's changeMe from .env>`; then, open the browser to `localhost:8081`.
 
 ## Live
 
